@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.env
+.env.local
+
+# Test artifacts — mutate on every run, don't commit
+runs/history/
+.artifacts/screenshots/backoffice/
+.artifacts/screenshots/app/
+.artifacts/ocr/
+.artifacts/visual-diff/
+
+# Keep baseline screenshots checked in for visual regression
+!.artifacts/screenshots/_baseline/
+
+# Playwright
+playwright-report/
+test-results/
+
+# macOS
+.DS_Store
