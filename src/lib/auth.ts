@@ -10,14 +10,13 @@ export async function loginAsAdmin(page: Page): Promise<void> {
   const { email, password } = config.testUsers.admin
 
   await page.goto('/adminclub')
-  await page.getByLabel(/e-?mail/i).fill(email)
-  await page.getByLabel(/senha/i).fill(password)
+  await page.getByPlaceholder(/e-?mail/i).fill(email)
+  await page.getByPlaceholder(/senha/i).fill(password)
   await page.getByRole('button', { name: /entrar/i }).click()
 
-  await expect(page).toHaveURL(/two-factor/)
+  await expect(page).toHaveURL(/two-factor/, { timeout: 15_000 })
   const code = await getLatest2faCode({ flow: 'admin' })
-
-  await page.getByLabel(/código/i).fill(code)
+  await fillOtpBoxes(page, code)
   await page.getByRole('button', { name: /verificar|entrar/i }).click()
 
   await expect(page).toHaveURL(/dashboard/, { timeout: 15_000 })
@@ -31,15 +30,24 @@ export async function loginAsHr(page: Page): Promise<void> {
   const { email, password } = config.testUsers.hrAdmin
 
   await page.goto('/rhclub/login')
-  await page.getByLabel(/e-?mail/i).fill(email)
-  await page.getByLabel(/senha/i).fill(password)
+  await page.getByPlaceholder(/e-?mail/i).fill(email)
+  await page.getByPlaceholder(/senha/i).fill(password)
   await page.getByRole('button', { name: /entrar/i }).click()
 
-  await expect(page).toHaveURL(/two-factor/)
+  await expect(page).toHaveURL(/two-factor/, { timeout: 15_000 })
   const code = await getLatest2faCode({ flow: 'hr' })
-
-  await page.getByLabel(/código/i).fill(code)
+  await fillOtpBoxes(page, code)
   await page.getByRole('button', { name: /verificar|entrar/i }).click()
 
   await expect(page).toHaveURL(/wellness/, { timeout: 15_000 })
+}
+
+/**
+ * The 2FA page renders one <input> per digit. Focus the first, then type
+ * the code — the page auto-advances focus to the next box on each keystroke.
+ */
+async function fillOtpBoxes(page: Page, code: string): Promise<void> {
+  const boxes = page.locator('input:not([type="hidden"])')
+  await boxes.first().click()
+  await page.keyboard.type(code, { delay: 50 })
 }

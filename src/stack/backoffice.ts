@@ -33,7 +33,7 @@ export async function startBackoffice(opts: {
 
   if (opts.logFile) mkdirSync(dirname(opts.logFile), { recursive: true })
 
-  const child = spawn('yarn', ['dev', '--port', String(opts.port)], {
+  const child = spawn('npm', ['run', 'dev', '--', '--port', String(opts.port)], {
     cwd: opts.backofficePath,
     detached: true,
     env: {

@@ -25,7 +25,11 @@ export async function createTestDatabase(url: string): Promise<void> {
 }
 
 export async function runMigrations(backendPath: string, dbUrl: string): Promise<void> {
-  await execa('npx', ['prisma', 'migrate', 'deploy'], {
+  // `db push` syncs schema without migration history — fits test DBs where
+  // we don't need auditability. The backend's migration history currently
+  // has a broken step (references `plans` table that doesn't exist at that
+  // point) so `migrate deploy` fails. `db push` uses the live schema.
+  await execa('npx', ['prisma', 'db', 'push', '--skip-generate', '--accept-data-loss'], {
     cwd: backendPath,
     env: { ...process.env, DATABASE_URL: dbUrl },
   })

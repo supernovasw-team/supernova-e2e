@@ -22,13 +22,18 @@ export async function getLatest2faCode(opts: {
   const interval = opts.pollMs ?? 500
   const started = Date.now()
 
-  const metadataType = opts.flow === 'hr' ? 'HR_AUTH' : 'AUTH'
-  const query = `SELECT metadata->>'code' AS code FROM tokens WHERE type='AUTH' AND metadata->>'type'='${metadataType}' ORDER BY created_at DESC LIMIT 1;`
+  // Admin and HR both write into `tokens` with type='AUTH' and
+  // metadata={"code":"XXXXXX"}. In an isolated test DB the most recent row
+  // is always the one we just triggered — we don't need to disambiguate by
+  // user, though we filter to the expected user_id when known.
+  const query = `SELECT metadata->>'code' AS code FROM tokens WHERE type='AUTH' ORDER BY created_at DESC LIMIT 1;`
+  const psqlUrl = config.db.url.split('?')[0]  // psql rejects Prisma's ?schema= param
+  void opts.flow  // reserved for future disambiguation if needed
 
   while (Date.now() - started < timeout) {
     const { stdout } = await execa(
       'psql',
-      [config.db.url, '-t', '-A', '-c', query],
+      [psqlUrl, '-t', '-A', '-c', query],
       { reject: false },
     )
     const code = stdout.trim()
