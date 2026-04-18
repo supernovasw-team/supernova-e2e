@@ -1,16 +1,17 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import { loginAsAdmin } from '../../lib/auth.js'
 import { captureFullPage } from '../../lib/screenshot.js'
 
-// Courses page renders blank for admin — needs investigation
-test.fixme('/categorias/courses — primary action: Novo', async ({ page }) => {
+test('/categorias/courses — primary action: Novo', async ({ page }) => {
   await loginAsAdmin(page)
   await page.goto('/categorias/courses')
-  await page.locator('button').filter({ hasText: /^(\s*)(Nov[oa]|Criar|Adicionar|Configurar|Gerenciar|Enviar)/i }).first().click()
-  // Wait for either a form field or a modal dialog to indicate the action opened
+  // Wait for the page content to actually render — Vite + lazy fetch can
+  // leave the screen blank for a second or two on first visit after boot.
+  await page.getByRole('heading', { name: /Cursos/i }).waitFor({ timeout: 15_000 })
+  await page.locator('button').filter({ hasText: /^(\s*)(Nov[oa]|Criar|Adicionar)/i }).first().click()
   await Promise.race([
     page.locator('input:not([type="hidden"])').first().waitFor({ state: 'visible', timeout: 10_000 }),
     page.locator('[role="dialog"]').first().waitFor({ state: 'visible', timeout: 10_000 }),
-  ]).catch(() => { /* action may just navigate; screenshot will capture whatever surfaced */ })
+  ]).catch(() => { /* action may navigate or open modal */ })
   await captureFullPage(page, 'categorias-courses-action')
 })
