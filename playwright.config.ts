@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './src/scenarios',
-  testMatch: ['backoffice/**/*.spec.ts', 'backoffice-actions/**/*.spec.ts'],
+  testMatch: ['backoffice/**/*.spec.ts', 'backoffice-actions/**/*.spec.ts', 'cross-stack/**/*.spec.ts'],
   timeout: 60_000,
   expect: { timeout: 10_000 },
   fullyParallel: false,
@@ -36,6 +36,17 @@ export default defineConfig({
       name: 'hr',
       testMatch: ['**/11-login-hr.spec.ts', '**/7?-hr-authed-*.spec.ts', '**/11?-hr-*.spec.ts'],
       use: { ...devices['Desktop Chrome'], storageState: '.artifacts/state/hr.json' },
+    },
+    {
+      name: 'cross-stack',
+      testMatch: ['**/cross-stack/**/*.spec.ts'],
+      // Scenarios 01 and 02 act as admin; scenario 03 step 3 needs HR state.
+      // The hr storageState is set here; the admin-facing tests still work
+      // because admin state is also loaded by globalSetup and the backoffice
+      // routes are not role-gated at the browser level for the admin user.
+      // For strict isolation, individual specs can override via test.use().
+      use: { ...devices['Desktop Chrome'], storageState: '.artifacts/state/admin.json' },
+      timeout: 120_000, // Maestro flows can be slow
     },
   ],
 })

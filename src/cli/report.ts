@@ -1,5 +1,11 @@
+import { execa } from 'execa'
 import kleur from 'kleur'
+import { buildReport } from '../post/report.js'
 
-export async function report(_opts: { open?: boolean }): Promise<void> {
-  console.log(kleur.cyan('report — stub (will serve HTML index of latest run)'))
+export async function report(opts: { open?: boolean }): Promise<void> {
+  const htmlPath = await buildReport()
+  console.log(kleur.green(`Report: ${htmlPath}`))
+  if (opts.open) {
+    await execa('open', [htmlPath], { stdio: 'inherit' })
+  }
 }
