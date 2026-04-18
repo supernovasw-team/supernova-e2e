@@ -1,0 +1,40 @@
+{
+  "self_care": [
+    {
+      "name": "E2E — Respiração 5min",
+      "description": "Exercício de respiração guiada para reduzir ansiedade em 5 minutos.",
+      "n_audios": 1,
+      "isFree": true
+    },
+    {
+      "name": "E2E — Relaxamento corporal",
+      "description": "Varredura corporal progressiva para aliviar tensão muscular.",
+      "n_audios": 2,
+      "isFree": true
+    },
+    {
+      "name": "E2E — Meditação mindfulness",
+      "description": "Prática básica de atenção plena para iniciantes.",
+      "n_audios": 1,
+      "isFree": false
+    }
+  ],
+  "therapy": [
+    {
+      "name": "E2E — Ansiedade: introdução",
+      "description": "Série introdutória sobre compreensão e manejo da ansiedade.",
+      "n_audios": 3,
+      "isFree": true
+    },
+    {
+      "name": "E2E — Autoestima e autocompaixão",
+      "description": "Práticas para cultivar uma relação saudável consigo mesmo.",
+      "n_audios": 2,
+      "isFree": false
+    }
+  ],
+  "b2b_plan": {
+    "name": "E2E Corp",
+    "max_employees": 50
+  }
+}

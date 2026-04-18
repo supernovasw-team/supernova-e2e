@@ -10,9 +10,8 @@
     "resolveJsonModule": true,
     "declaration": true,
     "outDir": "dist",
-    "rootDir": "src",
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "e2e.config.ts", "playwright.config.ts"],
   "exclude": ["node_modules", "dist", "runs", ".artifacts"]
 }

@@ -8,12 +8,12 @@ export const config = {
     app: process.env.E2E_APP_PATH ?? resolve(process.env.HOME!, 'Documents/supernova/saude_mental_app'),
   },
   ports: {
-    backend: Number(process.env.E2E_BACKEND_PORT ?? 8000),
+    backend: Number(process.env.E2E_BACKEND_PORT ?? 8088),
     backoffice: Number(process.env.E2E_BACKOFFICE_PORT ?? 3000),
     metro: Number(process.env.E2E_METRO_PORT ?? 8081),
   },
   urls: {
-    backend: process.env.BACKEND_URL ?? 'http://localhost:8000',
+    backend: process.env.BACKEND_URL ?? 'http://localhost:8088',
     backoffice: process.env.BACKOFFICE_URL ?? 'http://localhost:3000',
   },
   db: {

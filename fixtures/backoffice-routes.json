@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "source": "backoffice repo scan 2026-04-18, Explore agent",
+    "framework": "React 16.9 + Vite + react-router-dom v5",
+    "admin_login_url": "/adminclub",
+    "hr_login_url": "/rhclub/login"
+  },
+  "admin_public": [
+    {"path": "/adminclub", "anchors": ["E-mail", "Senha", "Entrar"]},
+    {"path": "/login/two-factor", "anchors": ["Código de Autenticação", "Verificar"]}
+  ],
+  "hr_public": [
+    {"path": "/rhclub/login", "anchors": ["HR Club", "E-mail", "Senha", "Entrar"]},
+    {"path": "/rhclub/login/two-factor", "anchors": ["Código de Autenticação", "Verificar"]}
+  ],
+  "admin_authed": [
+    {"path": "/dashboard", "section": "Main", "anchors": ["Dashboard", "Gestão de Conteúdo", "Gestão de Planos"]},
+    {"path": "/categorias/terapias", "section": "Content", "anchors": ["Terapias Guiadas", "Nova Terapia"]},
+    {"path": "/categorias/artigos", "section": "Content", "anchors": ["Artigos", "Novo Artigo"]},
+    {"path": "/categorias/selfcare", "section": "Content", "anchors": ["Selfcare", "Novo Selfcare"]},
+    {"path": "/categorias/courses", "section": "Content", "anchors": ["Cursos", "Novo Curso"]},
+    {"path": "/categorias/programas", "section": "Content", "anchors": ["Programas", "Novo Programa"]},
+    {"path": "/categorias/slides", "section": "Content", "anchors": ["Slides", "Novo Slide"]},
+    {"path": "/categorias/users", "section": "Users", "anchors": ["Usuários", "Novo Usuário", "Importar de XLSX"]},
+    {"path": "/categorias/audit/age-rejections", "section": "Audit", "anchors": ["Age Rejections Audit"]},
+    {"path": "/categorias/terms/versions", "section": "Audit", "anchors": ["Terms Versions", "Nova Versão"]},
+    {"path": "/categorias/terms/acceptances", "section": "Audit", "anchors": ["Terms Acceptances"]},
+    {"path": "/categorias/crisis/events", "section": "Audit", "anchors": ["Crisis Events"]},
+    {"path": "/categorias/reports", "section": "Audit", "anchors": ["Relatórios de Conteúdo"]},
+    {"path": "/categorias/compliance", "section": "Audit", "anchors": ["Relatório de Conformidade"]},
+    {"path": "/b2b-plan-manager", "section": "Plans", "anchors": ["Planos B2B", "Novo Plano"]},
+    {"path": "/premium-plan-manager", "section": "Plans", "anchors": ["Planos Premium", "Novo Plano"]},
+    {"path": "/engagement/rewards", "section": "Gamification", "anchors": ["Recompensas", "Nova Recompensa", "Pendentes"]},
+    {"path": "/engagement/badges", "section": "Gamification", "anchors": ["Distintivos", "Novo Distintivo"]},
+    {"path": "/engagement/challenges", "section": "Gamification", "anchors": ["Desafios", "Novo Desafio"]},
+    {"path": "/engagement/ranking", "section": "Gamification", "anchors": ["Ranking", "Configurações"]},
+    {"path": "/engagement/tiers", "section": "Gamification", "anchors": ["Níveis", "Novo Nível"]},
+    {"path": "/engagement/points", "section": "Gamification", "anchors": ["Pontos", "Regra de Pontos"]},
+    {"path": "/analytics/dashboard", "section": "Analytics", "anchors": ["Analytics", "Métricas"]},
+    {"path": "/notifications/management", "section": "Notifications", "anchors": ["Notificações"]}
+  ],
+  "hr_authed": [
+    {"path": "/wellness-dashboard", "section": "HR", "anchors": ["Dashboard de Bem-Estar", "Colaboradores Ativos"]},
+    {"path": "/wellness/mood-tracking", "section": "HR", "anchors": ["Monitoramento de Humor", "Tendência"]},
+    {"path": "/wellness/ranking", "section": "HR", "anchors": ["Ranking", "Metas", "Progresso"]},
+    {"path": "/wellness/rewards", "section": "HR", "anchors": ["Recompensas", "Orçamento"]},
+    {"path": "/wellness/reports", "section": "HR", "anchors": ["Relatórios", "Exportar", "Período"]},
+    {"path": "/wellness/settings", "section": "HR", "anchors": ["Configurações", "Conta", "Usuários", "Importar CSV"]},
+    {"path": "/wellness/analytics", "section": "HR", "anchors": ["Análises HR", "Bem-Estar", "Conteúdo", "ROI", "Engajamento"]}
+  ]
+}
