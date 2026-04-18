@@ -1,0 +1,80 @@
+{
+  "/rhclub/login": {
+    "title": "SM BackOffice",
+    "url": "/rhclub/login",
+    "headings": [
+      "RH Club"
+    ],
+    "visibleText": [
+      "ENTRAR NO RH CLUB"
+    ]
+  },
+  "/premium-plan-manager": {
+    "title": "SM BackOffice",
+    "url": "/premium-plan-manager",
+    "headings": [],
+    "visibleText": [
+      "Sair"
+    ]
+  },
+  "/engagement/rewards": {
+    "title": "SM BackOffice",
+    "url": "/engagement/rewards",
+    "headings": [
+      "Gestão de Recompensas"
+    ],
+    "visibleText": []
+  },
+  "/wellness/ranking": {
+    "title": "SM BackOffice",
+    "url": "/wellness/ranking",
+    "headings": [
+      "Ranking & Metas",
+      "Meta da Empresa",
+      "Nenhum dado de ranking disponivel"
+    ],
+    "visibleText": [
+      "E2E Corp",
+      "Este Mês"
+    ]
+  },
+  "/wellness/reports": {
+    "title": "SM BackOffice",
+    "url": "/wellness/reports",
+    "headings": [
+      "Relatórios",
+      "Filtros"
+    ],
+    "visibleText": [
+      "E2E Corp",
+      "Gerar CSV",
+      "Gerar seu primeiro relatório"
+    ]
+  },
+  "/wellness/analytics": {
+    "title": "SM BackOffice",
+    "url": "/wellness/analytics",
+    "headings": [
+      "Analises HR",
+      "Evolução das Emoções",
+      "Emoções Positivas (Radar)",
+      "Emoções Negativas (Radar)",
+      "Evolução Temporal dos Macrotemas",
+      "Comparativo de Períodos"
+    ],
+    "visibleText": [
+      "E2E Corp"
+    ]
+  },
+  "/wellness/settings": {
+    "title": "SM BackOffice",
+    "url": "/wellness/settings",
+    "headings": [
+      "Configuracoes"
+    ],
+    "visibleText": [
+      "E2E Corp",
+      "Editar"
+    ]
+  }
+}
