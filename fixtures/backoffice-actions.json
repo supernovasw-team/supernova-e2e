@@ -1,0 +1,950 @@
+{
+  "_meta": {
+    "generated_at": "2026-04-18",
+    "source": "static analysis of backoffice React source",
+    "framework": "React 16.9 + Vite + react-router-dom v5",
+    "routes_covered": 28,
+    "auth_flows": ["admin_authed", "hr_authed"],
+    "notes": "Covers all CRUD-heavy pages and gamification. Audit pages are read-only. Uses custom fetch wrapper for API calls."
+  },
+  "pages": [
+    {
+      "route": "/dashboard",
+      "file": "app/dashboard/Dashboard.jsx",
+      "auth_flow": "admin",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/categorias/terapias",
+      "file": "app/categorias/Terapias.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo')",
+        "opens": "ContentFormModal"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "navigate",
+          "opens": "EditTerapia/:id",
+          "api_called": "GET /api/terapias/:id"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/terapias/:id",
+          "db_effect": "DELETE FROM therapies WHERE id=:id"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome", "required": true, "type": "text" },
+        { "name": "Descrição", "required": true, "type": "textarea" },
+        { "name": "Autores", "required": false, "type": "select_multiple" },
+        { "name": "Publicado", "required": false, "type": "checkbox" },
+        { "name": "Gratuito", "required": false, "type": "checkbox" },
+        { "name": "Thumbnail", "required": false, "type": "file" },
+        { "name": "Capa", "required": false, "type": "file" }
+      ],
+      "filters": [
+        { "label": "Filtrar por nome", "type": "search" }
+      ],
+      "actions": [
+        { "action": "Drag to reorder", "api_called": "POST /api/reorderItems" }
+      ],
+      "expected_outcome": {
+        "on_create": "new row in list + modal closes + toast 'Nova terapia criada'",
+        "on_edit": "navigate to EditTerapia page",
+        "on_delete": "row removed + toast 'Terapia deletada'",
+        "on_reorder": "items reordered via drag + API call"
+      }
+    },
+    {
+      "route": "/categorias/artigos",
+      "file": "app/categorias/Artigos.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "navigate",
+          "opens": "EditArtigos/:id"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/artigos/:id"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome", "required": true, "type": "text" },
+        { "name": "Descrição", "required": true, "type": "textarea" },
+        { "name": "Autores", "required": false, "type": "select_multiple" },
+        { "name": "Publicado", "required": false, "type": "checkbox" },
+        { "name": "Gratuito", "required": false, "type": "checkbox" },
+        { "name": "Thumbnail", "required": false, "type": "file" },
+        { "name": "Capa", "required": false, "type": "file" }
+      ],
+      "filters": [
+        { "label": "Filtrar por nome", "type": "search" }
+      ],
+      "actions": [
+        { "action": "Drag to reorder", "api_called": "POST /api/reorderItems" }
+      ],
+      "expected_outcome": {
+        "on_create": "new row in list + modal closes + toast 'Novo artigo criado'",
+        "on_delete": "row removed + toast 'Artigo deletado'"
+      }
+    },
+    {
+      "route": "/categorias/selfcare",
+      "file": "app/categorias/Selfcare.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "navigate",
+          "opens": "EditSelfcare/:id"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/selfcare/:id"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome", "required": true, "type": "text" },
+        { "name": "Descrição", "required": true, "type": "textarea" },
+        { "name": "Autores", "required": false, "type": "select_multiple" },
+        { "name": "Publicado", "required": false, "type": "checkbox" },
+        { "name": "Gratuito", "required": false, "type": "checkbox" },
+        { "name": "Thumbnail", "required": false, "type": "file" },
+        { "name": "Capa", "required": false, "type": "file" }
+      ],
+      "filters": [
+        { "label": "Filtrar por nome", "type": "search" }
+      ],
+      "actions": [
+        { "action": "Drag to reorder", "api_called": "POST /api/reorderItems" }
+      ],
+      "expected_outcome": {
+        "on_create": "new row in list + modal closes + toast 'Nova selfcare criada'",
+        "on_delete": "row removed + toast 'Selfcare deletada'"
+      }
+    },
+    {
+      "route": "/categorias/courses",
+      "file": "app/categorias/Courses/list-courses.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "navigate",
+          "opens": "EditCourse/:id"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/courses/:id"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome", "required": true, "type": "text" },
+        { "name": "Descrição", "required": true, "type": "textarea" },
+        { "name": "Autores", "required": false, "type": "select_multiple" },
+        { "name": "Publicado", "required": false, "type": "checkbox" },
+        { "name": "Gratuito", "required": false, "type": "checkbox" },
+        { "name": "Thumbnail", "required": false, "type": "file" },
+        { "name": "Capa", "required": false, "type": "file" }
+      ],
+      "filters": [
+        { "label": "Filtrar por nome", "type": "search" }
+      ],
+      "actions": [
+        { "action": "Drag to reorder", "api_called": "POST /api/reorderItems" }
+      ],
+      "expected_outcome": {
+        "on_create": "new row in list + modal closes + toast 'Novo curso criado'",
+        "on_delete": "row removed + toast 'Curso deletado'"
+      }
+    },
+    {
+      "route": "/categorias/programas",
+      "file": "app/categorias/Programas.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "navigate",
+          "opens": "EditPrograma/:id"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/programas/:id"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome", "required": true, "type": "text" },
+        { "name": "Descrição", "required": true, "type": "textarea" },
+        { "name": "Autores", "required": false, "type": "select_multiple" },
+        { "name": "Publicado", "required": false, "type": "checkbox" },
+        { "name": "Gratuito", "required": false, "type": "checkbox" },
+        { "name": "Sequencial", "required": false, "type": "checkbox" },
+        { "name": "Thumbnail", "required": false, "type": "file" },
+        { "name": "Capa", "required": false, "type": "file" }
+      ],
+      "filters": [
+        { "label": "Filtrar por nome", "type": "search" }
+      ],
+      "actions": [
+        { "action": "Drag to reorder", "api_called": "POST /api/reorderProgramas" }
+      ],
+      "expected_outcome": {
+        "on_create": "new row in list + modal closes + toast 'Novo programa criado'",
+        "on_delete": "row removed + toast 'Programa deletado'"
+      }
+    },
+    {
+      "route": "/categorias/slides",
+      "file": "app/categorias/Slides.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo Slide",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo Slide')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "open_modal",
+          "selector_hint": "button[class*='btn-outline-primary']"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/slides/:id",
+          "selector_hint": "button[class*='btn-outline-danger']"
+        },
+        {
+          "label": "Toggle Publicado",
+          "kind": "click",
+          "api_called": "PUT /api/slides/:id",
+          "selector_hint": ".status-indicator"
+        }
+      ],
+      "form_fields": [
+        { "name": "Título", "required": true, "type": "text" },
+        { "name": "Subtítulo", "required": false, "type": "text" },
+        { "name": "Tipo de Link", "required": true, "type": "select" },
+        { "name": "Destino", "required": false, "type": "select_or_url" },
+        { "name": "Cor de Fundo", "required": false, "type": "color" },
+        { "name": "Imagem", "required": true, "type": "file" },
+        { "name": "URL Imagem", "required": false, "type": "url" },
+        { "name": "Status", "required": false, "type": "checkbox" }
+      ],
+      "filters": [
+        { "label": "Filtrar por título", "type": "search" }
+      ],
+      "actions": [
+        { "action": "Drag to reorder", "api_called": "POST /api/reorderSlides" }
+      ],
+      "expected_outcome": {
+        "on_create": "new row in list + modal closes + toast 'Slide criado'",
+        "on_edit": "row updated + modal closes + toast 'Slide atualizado'",
+        "on_delete": "confirm dialog + row removed + toast 'Slide excluído'",
+        "on_toggle_publish": "status badge toggles + toast 'Slide publicado/despublicado'",
+        "on_reorder": "items reordered + toast 'Ordem atualizada'"
+      }
+    },
+    {
+      "route": "/categorias/users",
+      "file": "app/categorias/Users.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo Usuário",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "open_modal",
+          "selector_hint": "button[class*='edit']"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/users/:id"
+        },
+        {
+          "label": "Banir/Desbanir",
+          "kind": "click",
+          "api_called": "PUT /api/users/:id/ban",
+          "selector_hint": "button:has-text('Banir|Desbanir')"
+        },
+        {
+          "label": "Toggle Admin",
+          "kind": "checkbox_click",
+          "api_called": "PUT /api/users/:id/admin"
+        },
+        {
+          "label": "Toggle Criar Conteúdo",
+          "kind": "checkbox_click",
+          "api_called": "PUT /api/users/:id/can_create_content"
+        }
+      ],
+      "form_fields": [
+        { "name": "Primeiro Nome", "required": true, "type": "text" },
+        { "name": "Último Nome", "required": true, "type": "text" },
+        { "name": "Email", "required": true, "type": "email" },
+        { "name": "CPF", "required": true, "type": "text" },
+        { "name": "Data de Nascimento", "required": false, "type": "date" },
+        { "name": "Senha", "required": true, "type": "password" },
+        { "name": "Bio", "required": false, "type": "textarea" },
+        { "name": "Plano B2B", "required": false, "type": "select" },
+        { "name": "Plano Premium", "required": false, "type": "select" },
+        { "name": "Admin", "required": false, "type": "checkbox" },
+        { "name": "Pode Criar Conteúdo", "required": false, "type": "checkbox" },
+        { "name": "Foto de Perfil", "required": false, "type": "file" }
+      ],
+      "filters": [
+        { "label": "Filtrar por nome", "type": "search" }
+      ],
+      "actions": [
+        { "action": "Importar XLSX", "kind": "import_file", "api_called": "POST /api/users/import/xlsx" }
+      ],
+      "expected_outcome": {
+        "on_create": "new user in list + toast 'Usuário criado'",
+        "on_edit": "user data updated + toast 'Usuário atualizado'",
+        "on_delete": "row removed + toast 'Usuário removido'",
+        "on_ban": "row status changes + toast 'Usuário banido/desbanido'",
+        "on_toggle_admin": "checkbox toggles + API call",
+        "on_toggle_create_content": "checkbox toggles + API call",
+        "on_import_xlsx": "multiple users created + import dialog closes + toast with results"
+      }
+    },
+    {
+      "route": "/categorias/terms/versions",
+      "file": "app/categorias/TermsVersions.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Nova versão",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Nova versão')"
+      },
+      "row_actions": [
+        {
+          "label": "Ativar",
+          "kind": "confirm_dialog",
+          "api_called": "PUT /api/terms/:id/activate",
+          "selector_hint": "button:has-text('Ativar')"
+        },
+        {
+          "label": "Ver termos",
+          "kind": "navigate_external",
+          "selector_hint": "a:has-text('Ver termos')"
+        }
+      ],
+      "form_fields": [
+        { "name": "Versão", "required": true, "type": "text" },
+        { "name": "URL dos Termos", "required": true, "type": "url" },
+        { "name": "URL Política de Privacidade", "required": false, "type": "url" },
+        { "name": "Data efetiva", "required": true, "type": "datetime_local" },
+        { "name": "Resumo das mudanças", "required": false, "type": "textarea" },
+        { "name": "Ativar imediatamente", "required": false, "type": "checkbox" }
+      ],
+      "filters": [],
+      "expected_outcome": {
+        "on_create": "new version in list + modal closes + toast 'Versão criada'",
+        "on_activate": "confirm dialog + status changes to 'Ativa' + forces user re-acceptance"
+      }
+    },
+    {
+      "route": "/categorias/audit/age-rejections",
+      "file": "app/categorias/AgeRejectionsAudit.jsx",
+      "auth_flow": "admin",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [
+        { "label": "Data", "type": "date_range" }
+      ],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/categorias/terms/acceptances",
+      "file": "app/categorias/TermsAcceptanceAudit.jsx",
+      "auth_flow": "admin",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/categorias/crisis/events",
+      "file": "app/categorias/CrisisEventsAudit.jsx",
+      "auth_flow": "admin",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/categorias/reports",
+      "file": "app/categorias/ContentReports.jsx",
+      "auth_flow": "admin",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [
+        { "label": "Período", "type": "date_range" }
+      ],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/categorias/compliance",
+      "file": "app/categorias/ComplianceReport.jsx",
+      "auth_flow": "admin",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/b2b-plan-manager",
+      "file": "app/plans/B2BPlanManager.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo Plano",
+        "kind": "click",
+        "selector_hint": "button:has-text('Novo Plano')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "click",
+          "selector_hint": "button:has-text('Editar')"
+        },
+        {
+          "label": "Clonar",
+          "kind": "click",
+          "api_called": "POST /api/plans/clone",
+          "selector_hint": "button:has-text('Clonar')"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/b2b-plans/:id",
+          "selector_hint": "button:has-text('Deletar')"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome do Plano", "required": true, "type": "text" },
+        { "name": "Descrição", "required": false, "type": "textarea" },
+        { "name": "Tag Qualidade", "required": false, "type": "select" },
+        { "name": "Permissões - Artigos", "required": false, "type": "checkboxes" },
+        { "name": "Permissões - Self-Care", "required": false, "type": "checkboxes" },
+        { "name": "Permissões - Cursos", "required": false, "type": "checkboxes" },
+        { "name": "Permissões - Terapias", "required": false, "type": "checkboxes" }
+      ],
+      "filters": [],
+      "tabs": [
+        { "label": "Planos", "content": "Plan management CRUD" },
+        { "label": "Todos os Planos", "content": "Read-only view of all user plans" }
+      ],
+      "expected_outcome": {
+        "on_create": "new plan created + form fields reset + toast 'Plano criado'",
+        "on_edit": "plan data updated + toast 'Plano atualizado'",
+        "on_clone": "new plan created with copied permissions",
+        "on_delete": "confirm dialog + plan removed from list"
+      }
+    },
+    {
+      "route": "/premium-plan-manager",
+      "file": "app/plans/PremiumPlanManager.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo Plano",
+        "kind": "click",
+        "selector_hint": "button:has-text('Novo Plano')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "click",
+          "selector_hint": "button:has-text('Editar')"
+        },
+        {
+          "label": "Clonar",
+          "kind": "click",
+          "api_called": "POST /api/plans/clone"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/premium-plans/:id"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome do Plano", "required": true, "type": "text" },
+        { "name": "Descrição", "required": false, "type": "textarea" },
+        { "name": "Tag Qualidade", "required": false, "type": "select" },
+        { "name": "Permissões", "required": false, "type": "checkboxes" }
+      ],
+      "filters": [],
+      "tabs": [
+        { "label": "Planos", "content": "Plan management CRUD" },
+        { "label": "Todos os Planos", "content": "Read-only view of all user plans" }
+      ],
+      "expected_outcome": {
+        "on_create": "new plan created + form fields reset",
+        "on_edit": "plan data updated",
+        "on_clone": "new plan created with copied permissions",
+        "on_delete": "confirm dialog + plan removed"
+      }
+    },
+    {
+      "route": "/engagement/rewards",
+      "file": "app/engagement/RewardsManagement.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Nova Recompensa",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Nova Recompensa')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "open_modal",
+          "api_called": "GET /api/rewards/:id"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/rewards/:id"
+        },
+        {
+          "label": "Aprovar Solicitação",
+          "kind": "click",
+          "api_called": "POST /api/rewards/requests/:id/approve",
+          "selector_hint": "button:has-text('Aprovar')"
+        },
+        {
+          "label": "Rejeitar Solicitação",
+          "kind": "open_modal",
+          "api_called": "POST /api/rewards/requests/:id/reject"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome", "required": true, "type": "text" },
+        { "name": "Descrição", "required": true, "type": "textarea" },
+        { "name": "Custo em Pontos", "required": true, "type": "number" },
+        { "name": "Estoque", "required": false, "type": "number" },
+        { "name": "Categoria", "required": true, "type": "select" },
+        { "name": "Imagem", "required": false, "type": "file_or_url" }
+      ],
+      "filters": [],
+      "tabs": [
+        { "label": "Recompensas", "content": "Manage rewards" },
+        { "label": "Pendentes", "content": "Pending approval requests" }
+      ],
+      "view_modes": ["grid", "table"],
+      "expected_outcome": {
+        "on_create": "new reward in list + modal closes",
+        "on_edit": "reward data updated",
+        "on_delete": "confirm dialog + reward removed",
+        "on_approve": "request marked as approved + moved to history",
+        "on_reject": "reason modal + request marked as rejected"
+      }
+    },
+    {
+      "route": "/engagement/badges",
+      "file": "app/engagement/BadgesManagement.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo Distintivo",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "open_modal"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/badges/:id"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome", "required": true, "type": "text" },
+        { "name": "Descrição", "required": true, "type": "textarea" },
+        { "name": "Critérios", "required": true, "type": "text" },
+        { "name": "Ícone", "required": false, "type": "select" },
+        { "name": "Raridade", "required": true, "type": "select" },
+        { "name": "Ativo", "required": false, "type": "checkbox" }
+      ],
+      "filters": [],
+      "expected_outcome": {
+        "on_create": "new badge in list + modal closes",
+        "on_edit": "badge data updated",
+        "on_delete": "badge removed from list"
+      }
+    },
+    {
+      "route": "/engagement/challenges",
+      "file": "app/engagement/ChallengesManagement.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo Desafio",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "open_modal"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/challenges/:id"
+        },
+        {
+          "label": "Ver Participantes",
+          "kind": "open_modal",
+          "selector_hint": "button:has-text('Ver Participantes')"
+        }
+      ],
+      "form_fields": [
+        { "name": "Título", "required": true, "type": "text" },
+        { "name": "Descrição", "required": true, "type": "textarea" },
+        { "name": "Tipo de Desafio", "required": true, "type": "select" },
+        { "name": "Data de Início", "required": true, "type": "date" },
+        { "name": "Data de Fim", "required": true, "type": "date" },
+        { "name": "Pontos de Recompensa", "required": true, "type": "number" },
+        { "name": "Valor Alvo", "required": true, "type": "number" }
+      ],
+      "filters": [
+        { "label": "Status", "type": "select", "options": ["Ativo", "Inativo"] }
+      ],
+      "expected_outcome": {
+        "on_create": "new challenge in list + modal closes",
+        "on_edit": "challenge data updated",
+        "on_delete": "challenge removed",
+        "on_view_participants": "modal shows participants + progress"
+      }
+    },
+    {
+      "route": "/engagement/ranking",
+      "file": "app/engagement/RankingManagement.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Configurações",
+        "kind": "click",
+        "selector_hint": "button:has-text('Configurações')"
+      },
+      "row_actions": [],
+      "form_fields": [
+        { "name": "Configurações de Ranking", "required": false, "type": "textarea" }
+      ],
+      "filters": [],
+      "read_only": false,
+      "expected_outcome": {
+        "on_configure": "settings modal opens"
+      }
+    },
+    {
+      "route": "/engagement/tiers",
+      "file": "app/engagement/TiersManagement.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Novo Nível",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Novo')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "open_modal"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/tiers/:id"
+        }
+      ],
+      "form_fields": [
+        { "name": "Nome", "required": true, "type": "text" },
+        { "name": "Nível", "required": true, "type": "number" },
+        { "name": "Pontos Mínimos", "required": true, "type": "number" },
+        { "name": "Cor", "required": false, "type": "color" }
+      ],
+      "filters": [],
+      "expected_outcome": {
+        "on_create": "new tier in list",
+        "on_edit": "tier data updated",
+        "on_delete": "tier removed"
+      }
+    },
+    {
+      "route": "/engagement/points",
+      "file": "app/engagement/PointsManagement.jsx",
+      "auth_flow": "admin",
+      "primary_action": {
+        "label": "Regra de Pontos",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Regra')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "open_modal"
+        },
+        {
+          "label": "Deletar",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/points-rules/:id"
+        }
+      ],
+      "form_fields": [
+        { "name": "Ação", "required": true, "type": "select" },
+        { "name": "Pontos", "required": true, "type": "number" },
+        { "name": "Descrição", "required": false, "type": "textarea" }
+      ],
+      "filters": [],
+      "expected_outcome": {
+        "on_create": "new rule in list",
+        "on_edit": "rule data updated",
+        "on_delete": "rule removed"
+      }
+    },
+    {
+      "route": "/analytics/dashboard",
+      "file": "app/analytics/Dashboard.jsx",
+      "auth_flow": "admin",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [
+        { "label": "Período", "type": "date_range" }
+      ],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/notifications/management",
+      "file": "app/notifications/NotificationsManagement.jsx",
+      "auth_flow": "admin",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [],
+      "notes": "File appears empty or not fully implemented",
+      "expected_outcome": {}
+    },
+    {
+      "route": "/wellness-dashboard",
+      "file": "app/wellness/WellnessDashboard.jsx",
+      "auth_flow": "hr",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/wellness/mood-tracking",
+      "file": "app/wellness/MoodTracking.jsx",
+      "auth_flow": "hr",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [
+        { "label": "Período", "type": "date_range" }
+      ],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/wellness/ranking",
+      "file": "app/wellness/RankingMetas.jsx",
+      "auth_flow": "hr",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [],
+      "read_only": true,
+      "expected_outcome": {}
+    },
+    {
+      "route": "/wellness/rewards",
+      "file": "app/wellness/WellnessRewards.jsx",
+      "auth_flow": "hr",
+      "primary_action": {
+        "label": "Alocar Orçamento",
+        "kind": "open_modal",
+        "selector_hint": "button:has-text('Orçamento')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar",
+          "kind": "open_modal"
+        }
+      ],
+      "form_fields": [
+        { "name": "Orçamento Anual", "required": true, "type": "number" }
+      ],
+      "filters": [],
+      "expected_outcome": {
+        "on_update_budget": "modal closes + toast 'Orçamento atualizado'"
+      }
+    },
+    {
+      "route": "/wellness/reports",
+      "file": "app/wellness/WellnessReports.jsx",
+      "auth_flow": "hr",
+      "primary_action": {
+        "label": "Exportar",
+        "kind": "click",
+        "selector_hint": "button:has-text('Exportar')"
+      },
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [
+        { "label": "Período", "type": "date_range" }
+      ],
+      "read_only": true,
+      "expected_outcome": {
+        "on_export": "download file triggered"
+      }
+    },
+    {
+      "route": "/wellness/settings",
+      "file": "app/wellness/WellnessSettings.jsx",
+      "auth_flow": "hr",
+      "primary_action": {
+        "label": "Editar",
+        "kind": "click",
+        "selector_hint": "button:has-text('Editar')"
+      },
+      "row_actions": [
+        {
+          "label": "Editar Funcionário",
+          "kind": "open_modal"
+        },
+        {
+          "label": "Deletar Funcionário",
+          "kind": "confirm_dialog",
+          "api_called": "DELETE /api/employees/:id"
+        },
+        {
+          "label": "Desativar Funcionário",
+          "kind": "click",
+          "api_called": "PUT /api/employees/:id/deactivate"
+        },
+        {
+          "label": "Reativar Funcionário",
+          "kind": "click",
+          "api_called": "PUT /api/employees/:id/reactivate"
+        }
+      ],
+      "form_fields": [
+        { "name": "Logo Empresa", "required": false, "type": "file_or_url" },
+        { "name": "Razão Social", "required": true, "type": "text" },
+        { "name": "CNPJ", "required": true, "type": "text" },
+        { "name": "Fuso Horário", "required": true, "type": "select" },
+        { "name": "Idioma Padrão", "required": true, "type": "select" }
+      ],
+      "filters": [
+        { "label": "Pesquisar funcionário", "type": "search" },
+        { "label": "Status", "type": "select" }
+      ],
+      "tabs": [
+        { "label": "Conta", "content": "Company settings" },
+        { "label": "Usuários", "content": "Employee management" }
+      ],
+      "actions": [
+        { "action": "Importar CSV", "kind": "import_file", "api_called": "POST /api/employees/import/csv" }
+      ],
+      "expected_outcome": {
+        "on_update_settings": "toast 'Configurações atualizadas'",
+        "on_create_employee": "new employee in list + toast 'Funcionário criado'",
+        "on_edit_employee": "employee data updated",
+        "on_delete_employee": "employee removed + toast 'Funcionário deletado'",
+        "on_deactivate": "employee status changes + toast 'Funcionário desativado'",
+        "on_reactivate": "employee status changes + toast 'Funcionário reativado'",
+        "on_import_csv": "multiple employees created + import modal closes + results shown"
+      }
+    },
+    {
+      "route": "/wellness/analytics",
+      "file": "app/wellness/AnalyticsHeader.jsx",
+      "auth_flow": "hr",
+      "primary_action": null,
+      "row_actions": [],
+      "form_fields": [],
+      "filters": [
+        { "label": "Período", "type": "date_range" }
+      ],
+      "read_only": true,
+      "expected_outcome": {}
+    }
+  ],
+  "global": {
+    "common_toast_selectors": [
+      "[role='status']",
+      ".Toastify__toast",
+      ".react-toastify__toast"
+    ],
+    "common_delete_confirm_text": "Confirmar|Sim|Deletar|Excluir|Desativar",
+    "common_confirm_modal_text": "Tem certeza|confirmar|deseja",
+    "api_base": "dynamically loaded from env or localStorage",
+    "auth_header": "Authorization: Bearer <access_token>",
+    "api_wrapper": "custom fetch utility in src/app/api/url.jsx",
+    "notes": {
+      "form_submission": "Forms submit via modal 'Salvar' or 'Criar' buttons",
+      "confirmation": "window.confirm() for some deletes, React modal for others",
+      "file_uploads": "Base64 encoding for images, multipart/form-data for XLSX/CSV imports",
+      "pagination": "Some pages use React Beautiful DnD for reordering",
+      "read_only_pages": "Audit pages, reports, analytics are view-only with export capabilities",
+      "hr_vs_admin": "HR routes use WellnessLayout wrapper, admin routes use standard layout"
+    }
+  }
+}

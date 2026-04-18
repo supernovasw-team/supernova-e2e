@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
-  testDir: './src/scenarios/backoffice',
+  testDir: './src/scenarios',
+  testMatch: ['backoffice/**/*.spec.ts', 'backoffice-actions/**/*.spec.ts'],
   timeout: 60_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,
