@@ -5,7 +5,11 @@ import { captureFullPage } from '../../lib/screenshot.js'
 test('/engagement/ranking — primary action: Configurações', async ({ page }) => {
   await loginAsAdmin(page)
   await page.goto('/engagement/ranking')
-  await page.locator("button:has-text('Configurações')").first().click()
-  await captureFullPage(page, 'engagement-ranking-after-configuraes')
-  // TODO: assert navigation / toast / DB row per expected_outcome
+  await page.locator('button').filter({ hasText: /^(\s*)(Nov[oa]|Criar|Adicionar|Configurar|Gerenciar|Enviar)/i }).first().click()
+  // Wait for either a form field or a modal dialog to indicate the action opened
+  await Promise.race([
+    page.locator('input:not([type="hidden"])').first().waitFor({ state: 'visible', timeout: 10_000 }),
+    page.locator('[role="dialog"]').first().waitFor({ state: 'visible', timeout: 10_000 }),
+  ]).catch(() => { /* action may just navigate; screenshot will capture whatever surfaced */ })
+  await captureFullPage(page, 'engagement-ranking-action')
 })

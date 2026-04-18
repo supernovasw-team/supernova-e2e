@@ -3,12 +3,13 @@ import { config } from '../../e2e.config.js'
 import { getLatest2faCode } from './two-factor.js'
 
 /**
- * Login as admin: email + password + 2FA code from DB.
- * Waits for dashboard URL before returning.
+ * Login as admin. No-op if the page already has an admin session (storageState
+ * injected by globalSetup). Otherwise runs the full email+password+2FA flow.
  */
 export async function loginAsAdmin(page: Page): Promise<void> {
-  const { email, password } = config.testUsers.admin
+  if (await hasAdminSession(page)) return
 
+  const { email, password } = config.testUsers.admin
   await page.goto('/adminclub')
   await page.getByPlaceholder(/e-?mail/i).fill(email)
   await page.getByPlaceholder(/senha/i).fill(password)
@@ -23,12 +24,12 @@ export async function loginAsAdmin(page: Page): Promise<void> {
 }
 
 /**
- * Login as HR admin: email + password + 2FA code from DB.
- * Waits for wellness URL before returning.
+ * Login as HR. No-op if the page already has an HR session.
  */
 export async function loginAsHr(page: Page): Promise<void> {
-  const { email, password } = config.testUsers.hrAdmin
+  if (await hasHrSession(page)) return
 
+  const { email, password } = config.testUsers.hrAdmin
   await page.goto('/rhclub/login')
   await page.getByPlaceholder(/e-?mail/i).fill(email)
   await page.getByPlaceholder(/senha/i).fill(password)
@@ -40,6 +41,16 @@ export async function loginAsHr(page: Page): Promise<void> {
   await page.getByRole('button', { name: /verificar|entrar/i }).click()
 
   await expect(page).toHaveURL(/wellness/, { timeout: 15_000 })
+}
+
+async function hasAdminSession(page: Page): Promise<boolean> {
+  await page.goto('/')
+  return await page.evaluate(() => !!localStorage.getItem('access_token'))
+}
+
+async function hasHrSession(page: Page): Promise<boolean> {
+  await page.goto('/')
+  return await page.evaluate(() => !!localStorage.getItem('hr_access_token'))
 }
 
 /**

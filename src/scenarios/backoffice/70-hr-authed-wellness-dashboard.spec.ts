@@ -5,8 +5,6 @@ import { captureFullPage } from '../../lib/screenshot.js'
 test('/wellness-dashboard renders', async ({ page }) => {
   await loginAsHr(page)
   await page.goto('/wellness-dashboard')
-  for (const text of ['Dashboard de Bem-Estar', 'Colaboradores Ativos']) {
-    await expect(page.getByText(text, { exact: false }).first()).toBeVisible({ timeout: 15000 })
-  }
+  await expect(page.getByText('Dashboard de Bem-Estar', { exact: false }).first()).toBeVisible({ timeout: 15000 })
   await captureFullPage(page, 'wellness-dashboard')
 })

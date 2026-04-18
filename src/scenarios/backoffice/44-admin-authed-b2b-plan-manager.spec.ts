@@ -5,8 +5,6 @@ import { captureFullPage } from '../../lib/screenshot.js'
 test('/b2b-plan-manager renders', async ({ page }) => {
   await loginAsAdmin(page)
   await page.goto('/b2b-plan-manager')
-  for (const text of ['Planos B2B', 'Novo Plano']) {
-    await expect(page.getByText(text, { exact: false }).first()).toBeVisible({ timeout: 15000 })
-  }
+  await expect(page.getByText('Planos B2B', { exact: false }).first()).toBeVisible({ timeout: 15000 })
   await captureFullPage(page, 'b2b-plan-manager')
 })

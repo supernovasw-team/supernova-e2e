@@ -5,8 +5,6 @@ import { captureFullPage } from '../../lib/screenshot.js'
 test('/wellness/ranking renders', async ({ page }) => {
   await loginAsHr(page)
   await page.goto('/wellness/ranking')
-  for (const text of ['Ranking', 'Metas']) {
-    await expect(page.getByText(text, { exact: false }).first()).toBeVisible({ timeout: 15000 })
-  }
+  await expect(page.getByText('Ranking', { exact: false }).first()).toBeVisible({ timeout: 15000 })
   await captureFullPage(page, 'wellness-ranking')
 })

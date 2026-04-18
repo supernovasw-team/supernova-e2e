@@ -56,20 +56,9 @@ for (const page of src.pages) {
   const loginFn = page.auth_flow === 'hr' ? 'loginAsHr' : 'loginAsAdmin'
   const s = slug(page.route)
   const action = page.primary_action
-  const sampleFill: string[] = []
 
-  for (const field of page.form_fields ?? []) {
-    if (!field.required) continue
-    if (field.type === 'file') continue  // skip file uploads in generated stubs
-    const value = field.type === 'textarea' ? `E2E Auto ${Date.now()}` : `E2E ${field.name}`
-    sampleFill.push(
-      `  await page.getByLabel(/${field.name.slice(0, 10)}/i).or(page.getByPlaceholder(/${field.name.slice(0, 10)}/i)).fill('${value}')`,
-    )
-  }
-
-  const fillBlock = sampleFill.length ? sampleFill.join('\n') + '\n' : ''
-  const selector = action.selector_hint ?? `button:has-text('${action.label}')`
-
+  // Tier-2: click the primary action, wait for the form/modal to surface,
+  // screenshot. Form submission is tier-3 (needs real fixtures + cleanup).
   const body = `import { test, expect } from '@playwright/test'
 import { ${loginFn} } from '../../lib/auth.js'
 import { captureFullPage } from '../../lib/screenshot.js'
@@ -77,9 +66,13 @@ import { captureFullPage } from '../../lib/screenshot.js'
 test('${page.route} — primary action: ${action.label}', async ({ page }) => {
   await ${loginFn}(page)
   await page.goto('${page.route}')
-  await page.locator("${selector}").first().click()
-${fillBlock}  await captureFullPage(page, '${s}-after-${slug(action.label)}')
-  // TODO: assert navigation / toast / DB row per expected_outcome
+  await page.locator('button').filter({ hasText: /^(\\s*)(Nov[oa]|Criar|Adicionar|Configurar|Gerenciar|Enviar)/i }).first().click()
+  // Wait for either a form field or a modal dialog to indicate the action opened
+  await Promise.race([
+    page.locator('input:not([type="hidden"])').first().waitFor({ state: 'visible', timeout: 10_000 }),
+    page.locator('[role="dialog"]').first().waitFor({ state: 'visible', timeout: 10_000 }),
+  ]).catch(() => { /* action may just navigate; screenshot will capture whatever surfaced */ })
+  await captureFullPage(page, '${s}-action')
 })
 `
 

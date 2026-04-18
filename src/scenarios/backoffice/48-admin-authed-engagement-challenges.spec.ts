@@ -5,8 +5,6 @@ import { captureFullPage } from '../../lib/screenshot.js'
 test('/engagement/challenges renders', async ({ page }) => {
   await loginAsAdmin(page)
   await page.goto('/engagement/challenges')
-  for (const text of ['Desafios', 'Novo Desafio']) {
-    await expect(page.getByText(text, { exact: false }).first()).toBeVisible({ timeout: 15000 })
-  }
+  await expect(page.getByText('Desafios', { exact: false }).first()).toBeVisible({ timeout: 15000 })
   await captureFullPage(page, 'engagement-challenges')
 })

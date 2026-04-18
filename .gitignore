@@ -10,6 +10,9 @@ runs/history/
 .artifacts/ocr/
 .artifacts/visual-diff/
 
+# Session storage state (contains access tokens — never commit)
+.artifacts/state/
+
 # Keep baseline screenshots checked in for visual regression
 !.artifacts/screenshots/_baseline/
 

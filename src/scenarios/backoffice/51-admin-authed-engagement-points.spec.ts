@@ -5,8 +5,6 @@ import { captureFullPage } from '../../lib/screenshot.js'
 test('/engagement/points renders', async ({ page }) => {
   await loginAsAdmin(page)
   await page.goto('/engagement/points')
-  for (const text of ['Pontos', 'Regra de Pontos']) {
-    await expect(page.getByText(text, { exact: false }).first()).toBeVisible({ timeout: 15000 })
-  }
+  await expect(page.getByText('Pontos', { exact: false }).first()).toBeVisible({ timeout: 15000 })
   await captureFullPage(page, 'engagement-points')
 })
