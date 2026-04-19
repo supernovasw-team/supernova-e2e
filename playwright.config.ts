@@ -11,8 +11,11 @@ export default defineConfig({
   ],
   timeout: 60_000,
   expect: { timeout: 10_000 },
-  fullyParallel: false,
-  workers: 1,
+  // globalSetup handles login once per role (storageState) so the 2FA race
+  // is gone; workers can run in parallel. cross-stack project still runs
+  // serial to preserve step order.
+  fullyParallel: true,
+  workers: process.env.CI ? 2 : 4,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
   globalSetup: './src/lib/global-setup.ts',
@@ -62,6 +65,8 @@ export default defineConfig({
     {
       name: 'cross-stack',
       testMatch: ['**/cross-stack/**/*.spec.ts'],
+      fullyParallel: false,
+      workers: 1,
       // Scenarios 01 and 02 act as admin; scenario 03 step 3 needs HR state.
       // The hr storageState is set here; the admin-facing tests still work
       // because admin state is also loaded by globalSetup and the backoffice
