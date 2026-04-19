@@ -29,6 +29,10 @@ export default defineConfig({
     trace: 'on-first-retry',
     video: 'retain-on-failure',
     screenshot: 'only-on-failure',
+    // Short-circuit the backend's global rate limiter for e2e runs. Supported
+    // since saude_mental_backend#114 — NODE_ENV=production ignores this flag,
+    // so it's safe to leave on.
+    extraHTTPHeaders: { 'x-e2e-bypass': '1' },
   },
   projects: [
     {

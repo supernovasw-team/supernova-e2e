@@ -36,7 +36,7 @@ test.describe('/categorias/terms/versions CRUD — create, verify list, verify D
     await expect(page.locator('body')).toBeVisible({ timeout: 20_000 })
     await page.screenshot({ path: `${SCREENSHOT_DIR}/40-01-terms-list.png`, fullPage: true })
 
-    const novaBtn = page.getByRole('button', { name: /Nova versão/i }).first()
+    const novaBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novaBtn).toBeVisible({ timeout: 15_000 })
     await novaBtn.click()
 
@@ -50,7 +50,7 @@ test.describe('/categorias/terms/versions CRUD — create, verify list, verify D
 
   test('step 2: fill all required fields', async ({ page }) => {
     await page.goto('/categorias/terms/versions')
-    const novaBtn = page.getByRole('button', { name: /Nova versão/i }).first()
+    const novaBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novaBtn).toBeVisible({ timeout: 15_000 })
     await novaBtn.click()
     await page.waitForTimeout(800)
@@ -91,7 +91,7 @@ test.describe('/categorias/terms/versions CRUD — create, verify list, verify D
 
   test('step 3: submit and wait for list to show new version', async ({ page }) => {
     await page.goto('/categorias/terms/versions')
-    const novaBtn = page.getByRole('button', { name: /Nova versão/i }).first()
+    const novaBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novaBtn).toBeVisible({ timeout: 15_000 })
     await novaBtn.click()
     await page.waitForTimeout(800)

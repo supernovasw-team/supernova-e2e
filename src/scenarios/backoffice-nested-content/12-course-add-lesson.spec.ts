@@ -30,7 +30,7 @@ test.describe('12 — course add lesson', () => {
     await page.goto('/categorias/courses')
     await expect(page.locator('body')).toBeVisible({ timeout: 20_000 })
 
-    const novoBtn = page.getByRole('button', { name: /^\s*Novo/i }).first()
+    const novoBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novoBtn).toBeVisible({ timeout: 15_000 })
     await novoBtn.click()
     await page.waitForTimeout(800)

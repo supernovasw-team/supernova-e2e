@@ -6,6 +6,6 @@ test('/wellness/ranking renders', async ({ page }) => {
   await loginAsHr(page)
   await page.goto('/wellness/ranking')
   await page.waitForLoadState('networkidle').catch(() => {})
-  await expect(page.getByText(/Ranking/).first()).toBeVisible({ timeout: 15000 })
+  await expect(page.getByRole('heading', { name: /Ranking/ }).first()).toBeVisible({ timeout: 15000 })
   await captureFullPage(page, 'wellness-ranking')
 })

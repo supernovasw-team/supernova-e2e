@@ -26,7 +26,7 @@ test.describe('/premium-plan-manager row-actions', () => {
     await page.waitForTimeout(600)
     const nomeField = page.locator('[name="name"], #name, input[placeholder*="nome" i]').first()
     await nomeField.fill(SEED_NAME + EDIT_SUFFIX)
-    await page.getByRole('button', { name: /salvar|atualizar/i }).click()
+    await page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).click()
     await page.waitForTimeout(1_000)
     await dbAssert(config.db.url,
       `SELECT name FROM premium_plans WHERE name = '${SEED_NAME}${EDIT_SUFFIX}' LIMIT 1`,
@@ -37,16 +37,16 @@ test.describe('/premium-plan-manager row-actions', () => {
 
   test('step 2: create throwaway plan + delete + DB-assert gone', async ({ page }) => {
     await page.goto('/premium-plan-manager')
-    await page.getByRole('button', { name: /novo plano/i }).click()
+    await page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).click()
     await page.waitForTimeout(600)
     const nomeField = page.locator('[name="name"], #name, input[placeholder*="nome" i]').first()
     await nomeField.fill(THROWAWAY)
-    await page.getByRole('button', { name: /salvar|criar/i }).click()
+    await page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).click()
     await expect(page.locator(`text=${THROWAWAY}`).first()).toBeVisible({ timeout: 20_000 })
 
     const row = page.locator(`tr:has-text("${THROWAWAY}"), [data-testid*="row"]:has-text("${THROWAWAY}"), .plan-card:has-text("${THROWAWAY}")`).first()
     await row.getByRole('button', { name: /deletar/i }).click()
-    await page.getByRole('button', { name: /confirmar|sim|deletar/i }).click()
+    await page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).click()
     await expect(page.locator(`text=${THROWAWAY}`)).toHaveCount(0, { timeout: 10_000 })
 
     const rows = await dbQuery(config.db.url,

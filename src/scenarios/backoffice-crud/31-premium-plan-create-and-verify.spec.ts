@@ -27,7 +27,7 @@ test.describe('/premium-plan-manager CRUD — create, verify list, verify DB', (
     await expect(page.locator('body')).toBeVisible({ timeout: 20_000 })
     await page.screenshot({ path: `${SCREENSHOT_DIR}/31-01-premium-plan-list.png`, fullPage: true })
 
-    const novoBtn = page.getByRole('button', { name: /Novo Plano/i }).first()
+    const novoBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novoBtn).toBeVisible({ timeout: 15_000 })
     await novoBtn.click()
 
@@ -37,7 +37,7 @@ test.describe('/premium-plan-manager CRUD — create, verify list, verify DB', (
 
   test('step 2: fill required fields', async ({ page }) => {
     await page.goto('/premium-plan-manager')
-    const novoBtn = page.getByRole('button', { name: /Novo Plano/i }).first()
+    const novoBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novoBtn).toBeVisible({ timeout: 15_000 })
     await novoBtn.click()
     await page.waitForTimeout(800)
@@ -74,7 +74,7 @@ test.describe('/premium-plan-manager CRUD — create, verify list, verify DB', (
 
   test('step 3: submit and wait for plan to appear', async ({ page }) => {
     await page.goto('/premium-plan-manager')
-    const novoBtn = page.getByRole('button', { name: /Novo Plano/i }).first()
+    const novoBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novoBtn).toBeVisible({ timeout: 15_000 })
     await novoBtn.click()
     await page.waitForTimeout(800)

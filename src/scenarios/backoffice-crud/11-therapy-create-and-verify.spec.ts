@@ -24,7 +24,7 @@ test.describe('/categorias/terapias CRUD — create, verify list, verify DB', ()
     await expect(page.locator('body')).toBeVisible({ timeout: 20_000 })
     await page.screenshot({ path: `${SCREENSHOT_DIR}/11-01-terapia-list.png`, fullPage: true })
 
-    const novoBtn = page.getByRole('button', { name: /^\s*Novo/i }).first()
+    const novoBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novoBtn).toBeVisible({ timeout: 15_000 })
     await novoBtn.click()
 
@@ -36,7 +36,7 @@ test.describe('/categorias/terapias CRUD — create, verify list, verify DB', ()
 
   test('step 2: fill all required fields', async ({ page }) => {
     await page.goto('/categorias/terapias')
-    const novoBtn = page.getByRole('button', { name: /^\s*Novo/i }).first()
+    const novoBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novoBtn).toBeVisible({ timeout: 15_000 })
     await novoBtn.click()
     await page.waitForTimeout(800)
@@ -69,7 +69,7 @@ test.describe('/categorias/terapias CRUD — create, verify list, verify DB', ()
 
   test('step 3: submit and wait for list to show new item', async ({ page }) => {
     await page.goto('/categorias/terapias')
-    const novoBtn = page.getByRole('button', { name: /^\s*Novo/i }).first()
+    const novoBtn = page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first()
     await expect(novoBtn).toBeVisible({ timeout: 15_000 })
     await novoBtn.click()
     await page.waitForTimeout(800)

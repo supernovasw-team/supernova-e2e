@@ -34,7 +34,7 @@ test.describe('/categorias/programas row-actions', () => {
     await page.waitForURL(/\/programas\/\d+|edit/, { timeout: 10_000 })
     const nomeField = page.locator('#name, [name="name"]').first()
     await nomeField.fill(SEED_NAME + EDIT_SUFFIX)
-    await page.getByRole('button', { name: /salvar|atualizar/i }).click()
+    await page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).click()
     await page.waitForTimeout(1_000)
     await dbAssert(config.db.url,
       `SELECT name FROM programs WHERE name = '${SEED_NAME}${EDIT_SUFFIX}' LIMIT 1`,
@@ -45,7 +45,7 @@ test.describe('/categorias/programas row-actions', () => {
 
   test('step 3: create throwaway + delete + DB-assert gone', async ({ page }) => {
     await page.goto('/categorias/programas')
-    await page.getByRole('button', { name: /^\s*Novo/i }).first().click()
+    await page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first().click()
     await page.waitForTimeout(600)
     await page.locator('#name').first().fill(THROWAWAY)
     await page.locator('.ql-editor').first().click()
@@ -55,7 +55,7 @@ test.describe('/categorias/programas row-actions', () => {
 
     const row = page.locator(`tr:has-text("${THROWAWAY}"), [data-testid*="row"]:has-text("${THROWAWAY}")`).first()
     await row.getByRole('button', { name: /deletar|excluir/i }).click()
-    await page.getByRole('button', { name: /confirmar|sim|deletar|excluir/i }).click()
+    await page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).click()
     await expect(page.locator(`text=${THROWAWAY}`)).toHaveCount(0, { timeout: 10_000 })
 
     const rows = await dbQuery(config.db.url,
