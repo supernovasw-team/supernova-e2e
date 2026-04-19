@@ -27,24 +27,29 @@ test.describe('02 — admin sets user premium', () => {
 
     await page.screenshot({ path: `${SCREENSHOT_DIR}/02-01-users-list.png`, fullPage: true })
 
-    // Search for the end-user
-    const searchInput = page
-      .locator('input[placeholder*="nome" i], input[placeholder*="buscar" i], input[placeholder*="filtrar" i], input[type="search"]')
-      .first()
-
-    const searchVisible = await searchInput.isVisible().catch(() => false)
-    if (searchVisible) {
-      await searchInput.fill(TARGET_EMAIL)
+    // Users list filter is "Filtrar por nome" — matches the Nome column
+    // only (first+last name), NOT the email. Filter by "End" which matches
+    // the seeded "End User" row.
+    const searchInput = page.locator('input[placeholder*="nome" i]').first()
+    if (await searchInput.isVisible().catch(() => false)) {
+      await searchInput.fill('End')
       await page.waitForTimeout(600)
     }
 
     await page.screenshot({ path: `${SCREENSHOT_DIR}/02-02-users-filtered.png`, fullPage: true })
 
-    // Find the row containing the target email and click Editar
-    const row = page.locator(`tr:has-text("${TARGET_EMAIL}"), [data-testid*="user-row"]:has-text("${TARGET_EMAIL}")`).first()
+    // Row is a flex div (no <tr>), containing both the display name and
+    // email. Use the email as the unique anchor.
+    const row = page.locator(`:has-text("${TARGET_EMAIL}")`).filter({ has: page.locator('text=End User') }).first()
     await expect(row).toBeVisible({ timeout: 15_000 })
 
-    const editBtn = row.getByRole('button', { name: /editar/i }).first()
+    // The "Editar" column is a pencil icon, not a button with an
+    // accessible name. Target by aria-label, title, or the last
+    // interactive element in the row.
+    const editBtn = row
+      .locator('[aria-label*="Editar" i], [title*="editar" i]')
+      .first()
+      .or(row.locator('button, [role="button"]').last())
     await editBtn.click({ timeout: 10_000 })
 
     // Wait for modal / form

@@ -67,7 +67,8 @@ export async function run(opts: Opts): Promise<void> {
         stdio: 'inherit',
         env: {
           ...process.env,
-          EXPO_PUBLIC_API_BASE_URL: st.backend.url,
+          // Android emulator reaches host via 10.0.2.2, not localhost.
+          EXPO_PUBLIC_API_BASE_URL: st.backend.url.replace('localhost', '10.0.2.2'),
         },
       })
       done()

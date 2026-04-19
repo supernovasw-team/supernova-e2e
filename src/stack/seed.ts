@@ -133,6 +133,26 @@ export async function seed(
       },
     })
 
+    // ── 3b. App user (Maestro flows login with these creds) ────────────────
+    if (users.appUser) {
+      const appHash = await hashPassword(users.appUser.password)
+      await prisma.user.upsert({
+        where: { email: users.appUser.email },
+        create: {
+          ...PLACEHOLDER,
+          first_name: 'App',
+          last_name: 'User',
+          email: users.appUser.email,
+          hash: appHash,
+          freemium: true,
+        },
+        update: {
+          hash: appHash,
+          freemium: true,
+        },
+      })
+    }
+
     // ── 4. Content fixtures (owned by admin) ──────────────────────────────
     const selfCareIds: number[] = []
     for (const sc of seedData.self_care) {

@@ -22,3 +22,7 @@ test-results/
 
 # macOS
 .DS_Store
+
+# Tesseract language data (auto-downloaded)
+eng.traineddata
+por.traineddata

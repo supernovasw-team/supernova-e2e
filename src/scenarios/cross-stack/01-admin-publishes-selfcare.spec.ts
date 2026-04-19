@@ -37,27 +37,19 @@ test.describe('01 — admin publishes selfcare', () => {
     await page.waitForTimeout(800)
     await page.screenshot({ path: `${SCREENSHOT_DIR}/01-02-selfcare-modal-open.png`, fullPage: true })
 
-    // Fill Nome — the modal has a text input labelled "Nome"
-    const nomeField = page
-      .locator('input[placeholder*="nome" i], input[name*="nome" i], label:has-text("Nome") + input, label:has-text("Nome") ~ input')
-      .first()
+    // Nome — Form.Control with id="name", "Informações Básicas" section.
+    // Scroll into view since the modal is tall (cover header takes up first
+    // ~500px) and the name field is below the fold.
+    const nomeField = page.locator('#name')
+    await nomeField.scrollIntoViewIfNeeded()
+    await nomeField.fill(UNIQUE_TITLE, { timeout: 8_000 })
 
-    try {
-      await nomeField.fill(UNIQUE_TITLE, { timeout: 8_000 })
-    } catch {
-      // Fallback: fill the first visible text input inside any open dialog/modal
-      const fallback = page.locator('dialog input[type="text"], [role="dialog"] input[type="text"]').first()
-      await fallback.fill(UNIQUE_TITLE, { timeout: 8_000 })
-    }
-
-    // Fill Descrição if present
-    const descField = page
-      .locator('textarea[placeholder*="descri" i], textarea[name*="descri" i], label:has-text("Descrição") + textarea, label:has-text("Descrição") ~ textarea')
-      .first()
-    const descVisible = await descField.isVisible().catch(() => false)
-    if (descVisible) {
-      await descField.fill('Criado automaticamente pelo E2E cross-stack.')
-    }
+    // Descrição — rich-text editor is react-quill, rendered as a
+    // contenteditable div with class .ql-editor (not a <textarea>).
+    const descEditor = page.locator('.ql-editor').first()
+    await descEditor.scrollIntoViewIfNeeded()
+    await descEditor.click()
+    await page.keyboard.type('Criado automaticamente pelo E2E cross-stack.')
 
     await page.screenshot({ path: `${SCREENSHOT_DIR}/01-03-selfcare-form-filled.png`, fullPage: true })
 
