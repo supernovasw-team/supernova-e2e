@@ -2,7 +2,13 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './src/scenarios',
-  testMatch: ['backoffice/**/*.spec.ts', 'backoffice-actions/**/*.spec.ts', 'cross-stack/**/*.spec.ts'],
+  testMatch: [
+    'backoffice/**/*.spec.ts',
+    'backoffice-actions/**/*.spec.ts',
+    'backoffice-crud/**/*.spec.ts',
+    'backoffice-uploads/**/*.spec.ts',
+    'cross-stack/**/*.spec.ts',
+  ],
   timeout: 60_000,
   expect: { timeout: 10_000 },
   fullyParallel: false,
@@ -29,12 +35,28 @@ export default defineConfig({
     },
     {
       name: 'admin',
-      testMatch: ['**/10-login-admin.spec.ts', '**/3?-admin-authed-*.spec.ts', '**/4?-admin-authed-*.spec.ts', '**/5?-admin-authed-*.spec.ts', '**/1??-admin-*.spec.ts'],
+      testMatch: [
+        '**/10-login-admin.spec.ts',
+        '**/3?-admin-authed-*.spec.ts',
+        '**/4?-admin-authed-*.spec.ts',
+        '**/5?-admin-authed-*.spec.ts',
+        '**/1??-admin-*.spec.ts',
+        // tier-3 CRUD — every spec uses admin session
+        'backoffice-crud/**/*.spec.ts',
+        // uploads — admin-facing (users import, content image uploads)
+        'backoffice-uploads/1?-users-*.spec.ts',
+        'backoffice-uploads/3?-selfcare-*.spec.ts',
+      ],
       use: { ...devices['Desktop Chrome'], storageState: '.artifacts/state/admin.json' },
     },
     {
       name: 'hr',
-      testMatch: ['**/11-login-hr.spec.ts', '**/7?-hr-authed-*.spec.ts', '**/11?-hr-*.spec.ts'],
+      testMatch: [
+        '**/11-login-hr.spec.ts',
+        '**/7?-hr-authed-*.spec.ts',
+        '**/11?-hr-*.spec.ts',
+        'backoffice-uploads/2?-hr-*.spec.ts',
+      ],
       use: { ...devices['Desktop Chrome'], storageState: '.artifacts/state/hr.json' },
     },
     {
