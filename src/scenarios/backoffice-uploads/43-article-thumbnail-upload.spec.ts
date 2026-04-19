@@ -33,7 +33,7 @@ test.describe('43 — article thumbnail upload', () => {
       await page.goto('/categorias/artigos')
       await expect(page.locator('body')).toBeVisible({ timeout: 20_000 })
 
-      await page.getByRole('button', { name: /^\s*Novo/i }).first().click()
+      await page.locator('button').filter({ hasText: /^\s*(Nov[oa]|Criar|Adicionar)/i }).first().click()
       await page.waitForTimeout(800)
 
       const nomeField = page.locator('#name').first()

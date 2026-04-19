@@ -29,12 +29,12 @@ test.describe('04 — admin approves reward request', () => {
     )
     const userId = userRows[0].id
 
-    // Find any active reward. Prisma maps planId → plan_id in the DB.
+    // Find any active reward. Prisma maps planId → "planId" in the DB.
     // dbQuery returns positional keys '0', '1', … in tuples-only mode.
     type RewardRow = Record<string, string>
     const rewardRows = await dbQuery<RewardRow>(
       config.db.url,
-      `SELECT id, plan_id FROM rewards WHERE is_active = true ORDER BY id LIMIT 1;`,
+      `SELECT id, "planId" FROM rewards WHERE is_active = true ORDER BY id LIMIT 1;`,
     )
 
     if (rewardRows.length === 0) {
@@ -48,7 +48,7 @@ test.describe('04 — admin approves reward request', () => {
     // Insert pending request (ignore conflict if already exists from prior run)
     await dbQuery(
       config.db.url,
-      `INSERT INTO reward_requests (user_id, plan_id, reward_id, status, created_at, updated_at)
+      `INSERT INTO reward_requests ("userId", "planId", "rewardId", status, created_at, updated_at)
        VALUES (${userId}, ${planId}, ${rewardId}, 'PENDING', NOW(), NOW())
        RETURNING id;`,
     )
@@ -56,7 +56,7 @@ test.describe('04 — admin approves reward request', () => {
     // Fetch the latest pending request for this user
     const reqRows = await dbAssert<{ id: string }>(
       config.db.url,
-      `SELECT id FROM reward_requests WHERE user_id = ${userId} AND status = 'PENDING' ORDER BY id DESC LIMIT 1;`,
+      `SELECT id FROM reward_requests WHERE "userId" = ${userId} AND status = 'PENDING' ORDER BY id DESC LIMIT 1;`,
       ['id'],
     )
     seededRequestId = reqRows[0].id

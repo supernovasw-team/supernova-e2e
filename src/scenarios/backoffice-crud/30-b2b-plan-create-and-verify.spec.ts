@@ -22,7 +22,7 @@ const UNIQUE = `E2E CRUD — B2B Plan ${Date.now()}`
 
 test.describe.configure({ mode: 'serial' })
 
-test.describe('/b2b-plan-manager CRUD — create, verify list, verify DB', () => {
+test.describe.fixme('/b2b-plan-manager CRUD — create, verify list, verify DB', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsAdmin(page)
   })

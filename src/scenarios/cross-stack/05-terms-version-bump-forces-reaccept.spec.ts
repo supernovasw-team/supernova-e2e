@@ -104,7 +104,7 @@ test.describe('05 — terms version bump forces re-accept', () => {
       config.db.url,
       `SELECT version, is_active FROM terms_versions WHERE version = '${NEW_VERSION}' LIMIT 1;`,
       ['version', 'is_active'],
-      (r) => r.is_active === 't',
+      (r) => r['is_active'] === 't',
     )
     console.log('[db-assert] terms_version:', rows[0])
   })

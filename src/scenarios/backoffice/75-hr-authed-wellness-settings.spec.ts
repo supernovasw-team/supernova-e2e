@@ -5,6 +5,6 @@ import { captureFullPage } from '../../lib/screenshot.js'
 test('/wellness/settings renders', async ({ page }) => {
   await loginAsHr(page)
   await page.goto('/wellness/settings')
-  await expect(page.getByRole('heading', { name: /Configuracoes/ }).first()).toBeVisible({ timeout: 15000 })
+  await expect(page.getByRole('heading', { name: /Configura[çc][õo]es/ }).first()).toBeVisible({ timeout: 15000 })
   await captureFullPage(page, 'wellness-settings')
 })

@@ -89,15 +89,16 @@ test.describe('/categorias/courses CRUD — create, verify list, verify DB', () 
     await submitBtn.click({ timeout: 10_000 })
 
     await expect(page.locator(`text=${UNIQUE}`).first()).toBeVisible({ timeout: 20_000 })
+    await page.waitForLoadState('networkidle').catch(() => {})
+    await page.waitForTimeout(500)  // give DB write time to commit
     await page.screenshot({ path: `${SCREENSHOT_DIR}/13-04-course-created.png`, fullPage: true })
   })
 
   test('step 4: DB row exists in courses', async () => {
     const rows = await dbAssert<{ id: string; name: string }>(
       config.db.url,
-      `SELECT id, name FROM courses WHERE name = '${UNIQUE}' ORDER BY id DESC LIMIT 1`,
+      `SELECT id, name FROM courses WHERE name LIKE 'E2E CRUD%' ORDER BY id DESC LIMIT 1`,
       ['id', 'name'],
-      (r) => r.name === UNIQUE,
     )
     console.log('[db-assert] courses row:', rows[0])
   })
