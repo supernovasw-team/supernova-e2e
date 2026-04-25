@@ -89,6 +89,11 @@ test.describe('/categorias/selfcare CRUD — create, verify list, verify DB', ()
     await submitBtn.click({ timeout: 10_000 })
 
     await expect(page.locator(`text=${UNIQUE}`).first()).toBeVisible({ timeout: 20_000 })
+    // FE updates list optimistically; POST is still in flight. Wait for the
+    // network to settle so the row commits before we tear down the page —
+    // otherwise the in-flight fetch is aborted and step 4 finds no DB row.
+    await page.waitForLoadState('networkidle').catch(() => {})
+    await page.waitForTimeout(500)
     await page.screenshot({ path: `${SCREENSHOT_DIR}/10-04-selfcare-created.png`, fullPage: true })
   })
 
