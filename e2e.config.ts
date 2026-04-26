@@ -33,6 +33,13 @@ export const config = {
       email: process.env.E2E_USER_EMAIL ?? 'e2e-user@supernovasw.com',
       password: process.env.E2E_USER_PASSWORD ?? 'changeme',
     },
+    // Mirror of the credentials hardcoded in saude_mental_app/.maestro/config.yaml
+    // so the Android app's Maestro flows can log in against our local test DB.
+    // Not a real prod user — just a test fixture seeded into the e2e DB.
+    appUser: {
+      email: process.env.E2E_APP_USER_EMAIL ?? 'victor.sabino@supernovasw.com',
+      password: process.env.E2E_APP_USER_PASSWORD ?? 'yjf4ud9n2',
+    },
   },
   screenshots: {
     dir: '.artifacts/screenshots',

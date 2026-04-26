@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QA Report — SaudeMental.club+</title>
+<style>
+:root {
+  --bg: #0f0f13;
+  --surface: #1a1a24;
+  --surface2: #222231;
+  --border: #2e2e42;
+  --text: #e2e2f0;
+  --text-muted: #888899;
+  --pass: #22c55e;
+  --fail: #ef4444;
+  --flaky: #f59e0b;
+  --fixme: #94a3b8;
+  --skip: #64748b;
+  --accent: #6366f1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);padding:24px;min-height:100vh}
+a{color:var(--accent)}
+
+/* Header */
+.report-header{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:24px}
+.report-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.report-meta{font-size:12px;color:var(--text-muted);margin-bottom:16px}
+.report-meta strong{color:var(--text)}
+
+/* Summary table */
+.summary-table{width:100%;border-collapse:collapse;font-size:13px}
+.summary-table th{text-align:left;padding:6px 10px;color:var(--text-muted);border-bottom:1px solid var(--border)}
+.summary-table td{padding:6px 10px;border-bottom:1px solid var(--border)}
+.stat-label{font-weight:600}
+.stat-num{text-align:right;font-variant-numeric:tabular-nums}
+.stat-num.pass{color:var(--pass)}
+.stat-num.fail{color:var(--fail)}
+.stat-num.flaky{color:var(--flaky)}
+.stat-num.fixme{color:var(--fixme)}
+.stat-num.skip{color:var(--skip)}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text-muted);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;transition:all .15s}
+.tab-btn:hover{border-color:var(--accent);color:var(--text)}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.tab-count{font-size:11px;opacity:.75;margin-left:4px}
+
+/* Grid */
+.tab-panel{display:none;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.tab-panel.visible{display:grid}
+.empty{color:var(--text-muted);font-size:13px;padding:24px 0}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;border-left:3px solid var(--border)}
+.card.pass{border-left-color:var(--pass)}
+.card.fail{border-left-color:var(--fail)}
+.card.flaky{border-left-color:var(--flaky)}
+.card.fixme{border-left-color:var(--fixme)}
+.card.skip{border-left-color:var(--skip)}
+
+.card-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)}
+.card-badge{font-size:12px;font-weight:700}
+.card-badge.pass{color:var(--pass)}
+.card-badge.fail{color:var(--fail)}
+.card-badge.flaky{color:var(--flaky)}
+.card-badge.fixme{color:var(--fixme)}
+.card-badge.skip{color:var(--skip)}
+.card-dur{font-size:11px;color:var(--text-muted)}
+.card-name{padding:8px 14px;font-size:12px;color:var(--text-muted);line-height:1.4;word-break:break-word}
+
+.error-msg{margin:0 14px 8px;padding:8px;background:#2a1515;border:1px solid #4a2020;border-radius:6px;font-family:monospace;font-size:11px;color:#fca5a5;word-break:break-all}
+
+/* Screenshots */
+.shot-row{display:flex;gap:8px;padding:10px 14px;background:var(--surface2);border-top:1px solid var(--border)}
+.shot-wrap{flex:1;min-width:0;text-align:center}
+.shot-wrap img{max-width:100%;max-height:320px;object-fit:contain;border-radius:4px;background:#000}
+.shot-label{font-size:10px;color:var(--text-muted);margin-top:4px}
+.diff-label{color:var(--flaky)}
+
+/* OCR */
+.ocr-block{padding:8px 14px;border-top:1px solid var(--border)}
+.ocr-block summary{font-size:11px;color:var(--text-muted);cursor:pointer;user-select:none}
+.ocr-block summary:hover{color:var(--text)}
+.ocr-block pre{margin-top:6px;font-size:10px;white-space:pre-wrap;word-break:break-word;color:var(--text-muted);max-height:120px;overflow-y:auto;background:var(--surface2);padding:8px;border-radius:4px}
+</style>
+</head>
+<body>
+
+<div class="report-header">
+  <div class="report-title">SaudeMental.club+ QA Report</div>
+  <div class="report-meta">
+    Generated: <strong>2026-04-19 00:53:32</strong> &nbsp;·&nbsp;
+    Commit: <strong>70a0a1f</strong> &nbsp;·&nbsp;
+    Total: <strong>43</strong>
+    &nbsp; 🟢 3 &nbsp; 🔴 34 &nbsp; 🟡 0 &nbsp; ⚪ 3 &nbsp; ⬜ 3
+  </div>
+
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Layer</th><th style="text-align:right">Total</th><th style="text-align:right">Pass</th>
+        <th style="text-align:right">Fail</th><th style="text-align:right">Flaky</th>
+        <th style="text-align:right">Fixme</th><th style="text-align:right">Skip</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+    <tr>
+      <td class="stat-label">All</td>
+      <td class="stat-num">43</td>
+      <td class="stat-num pass">3</td>
+      <td class="stat-num fail">34</td>
+      <td class="stat-num flaky">0</td>
+      <td class="stat-num fixme">3</td>
+      <td class="stat-num skip">3</td>
+    </tr>
+      
+    <tr>
+      <td class="stat-label">Backoffice</td>
+      <td class="stat-num">0</td>
+      <td class="stat-num pass">0</td>
+      <td class="stat-num fail">0</td>
+      <td class="stat-num flaky">0</td>
+      <td class="stat-num fixme">0</td>
+      <td class="stat-num skip">0</td>
+    </tr>
+      
+    <tr>
+      <td class="stat-label">App (Maestro)</td>
+      <td class="stat-num">33</td>
+      <td class="stat-num pass">1</td>
+      <td class="stat-num fail">32</td>
+      <td class="stat-num flaky">0</td>
+      <td class="stat-num fixme">0</td>
+      <td class="stat-num skip">0</td>
+    </tr>
+      
+    <tr>
+      <td class="stat-label">Cross-stack</td>
+      <td class="stat-num">7</td>
+      <td class="stat-num pass">2</td>
+      <td class="stat-num fail">2</td>
+      <td class="stat-num flaky">0</td>
+      <td class="stat-num fixme">0</td>
+      <td class="stat-num skip">3</td>
+    </tr>
+      
+    <tr>
+      <td class="stat-label">Fixmes</td>
+      <td class="stat-num">3</td>
+      <td class="stat-num pass">0</td>
+      <td class="stat-num fail">0</td>
+      <td class="stat-num flaky">0</td>
+      <td class="stat-num fixme">3</td>
+      <td class="stat-num skip">0</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="tabs">
+<button class="tab-btn" data-panel="panel-backoffice" onclick="switchTab(this)">Backoffice <span class="tab-count">0</span></button>
+<button class="tab-btn" data-panel="panel-app" onclick="switchTab(this)">App (Maestro) <span class="tab-count">33</span></button>
+<button class="tab-btn" data-panel="panel-cross-stack" onclick="switchTab(this)">Cross-stack <span class="tab-count">7</span></button>
+<button class="tab-btn" data-panel="panel-fixme" onclick="switchTab(this)">Fixmes <span class="tab-count">3</span></button>
+</div>
+
+<div class="tab-panel" id="panel-backoffice"><p class="empty">No tests recorded for this layer.</p></div>
+<div class="tab-panel" id="panel-app">
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">Articles list</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/33-articles-list.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:06 CA VY |
+&lt; Artigos
+Q Pesquisar artigos
+2 WANT itl // Ts ~ &gt; . .
+2 AS (© Técnicas Para Lidar Com — (O
+o 0 mm | A Fobia Social
+E |
+| | i
+Z )
+D oO Técnicas Contra |
+= A @ . Ansiedade
+e À {
+Rh
+\ A o:
+a | | Prevenção Ao Suicídio: O
+&quot;Como Agir Da Maneira...
+NY © P=
+= |
+7 i) [
+OS Enfrentando A |
+P \ É Compulsão Alimentar
+BETA e comportamentos 4
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">SOS — Respiração</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/60-sos.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:15 SAS)
+&lt; Recursos de Emergência
+©
+Você não esta
+inho
+Se você está passando por um momento
+difícil, ligue. Eles estão disponíveis pra te
+ouvir.
+Respiração 5-4-3-2-1
+3 padrões guiados Grounding pelos
+sentidos
+Caixa SOS Didrio de Crise
+6 técnicas rápidas Organize o que
+você sente</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">Self-Cares list (from Home)</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/30-selfcares-list.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:06 CA CA
+Meus Favoritos
+Seus conteúdos salvos para acessar
+rapidamente
+Artigos Favoritos
+T 7) » TA. ? —~—— x
+&gt; e C o em &amp; hs,
+BLY Peo 08 = pe
+» ©
+e E &gt; CV JY | (
+Vá NO
+Técnicas contra Enfrentando
+ansiedade a Compulséo
+Alimentar
+Trilhas Self-Care Favoritas
+Bulimia |
+7! ash
+CAAT
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">Maestro chat</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/50-maestro-chat.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:07 SAS)
+&lt;
+ã. ~
+oa) m
+nm
+Oi, eu sou o Maestro!
+Sou a Inteligência Artificial do
+SaudeMental.club+ e vou ser sua
+companhia nessa jornada de
+bem-estar mental.
+Estou aqui para conversar, tirar
+dúvidas sobre saúde mental e</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">16.0s</span>
+    </div>
+    <div class="card-name">Reset Password (from profile)</div>
+    <div class="error-msg">Assertion is false: &quot;Meu Perfil&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/41-reset-password.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:07 CA VY |
+&lt; Alterar senha
+Digite sua senha atual e crie uma nova
+senha para continuar.
+Senha atual
+00000000 ©
+Nova senha
+00000000 ©
+Confirmar nova senha
+00000000 ©
+Atualizar Senha
+Esqueceu sua senha atual? Redefina aqui.
+Precisa de suporte? Fale com a gente!</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">20.0s</span>
+    </div>
+    <div class="card-name">Therapy detail (open first card)</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/81-therapy-detail.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:07 Cedi
+Meus Favoritos
+Seus conteúdos salvos para acessar
+rapidamente
+Artigos Favoritos
+T 7) » TA. ? —~—— x
+&gt; e C o em &amp; hs,
+BLY Peo 08 = pe
+» ©
+e E &gt; CV JY | (
+Vá NO
+Técnicas contra Enfrentando
+ansiedade a Compulséo
+Alimentar
+Trilhas Self-Care Favoritas
+Bulimia |
+7! ash
+CAAT
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">Diário de Emoções</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/categorias-slides-action.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">SOS — Contatos de Emergência</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/categorias-slides-action.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">Search tab</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/21-search.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:08 CR Jl |
+Pesquisar
+Encontre conteúdos de bem-estar
+Q Pesquisar
+Artigos Ver mais &gt;
+O: \ Wa E S/N . % e)
+5). ONE All EX 2-5
+O py or 1 ® E UNA
+| in e
+Técnicas para Técnicas contra
+lidar com a Fobia ansiedade
+Social
+Trilhas Self-Care Ver trilhas &gt;
+Es Introdução |
+Introdução
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">31.0s</span>
+    </div>
+    <div class="card-name">Login — happy path</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/00-smoke-login.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>SaudeMental Backoffice
+Login
+Entre para continuar.
+E-mail
+Seu E-mail
+Senha
+DO Manter conectado</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">16.0s</span>
+    </div>
+    <div class="card-name">Subscription details</div>
+    <div class="error-msg">Assertion is false: &quot;Meu Perfil&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/44-subscription.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:09 OCA
+&lt; Minha Assinatura
+o
+O que está incluso
+Conteúdo premium
+Maestro Al
+Benefício corporativo da sua
+empresa
+Cancelamento, mudança de plano e histórico de
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">16.0s</span>
+    </div>
+    <div class="card-name">Support</div>
+    <div class="error-msg">Assertion is false: &quot;Meu Perfil&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/42-support.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:09 SAS)
+&lt; Suporte
+Fale com a gente! @ Y
+O que é o SaudeMental.club+? 4
+Preciso pagar para usar o APP? Md
+Como redefinir minha senha? Y
+O APP substitui um psicólogo? Y
+Como funcionam os Relatórioseo — É
+Painel para Empresas?
+Posso cancelar minha assinatura É
+a qualquer momento?
+Você não está sozinho. O
+A =
+a a o
+4 em</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">SOS — Música Relaxante</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/66-sos-music.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:09 ASI)
+&lt; Música Relaxante
+Escolha uma faixa e deixe o som te ajudar a
+relaxar.
+Chuva na Floresta
+9,9,º 3:00
+Floresta ao Amanhecer
+3:00
+Meditação Ambiente
+à)
+IS 300
+Áudios ambientes sintéticos — domínio público (CCO)</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">15.0s</span>
+    </div>
+    <div class="card-name">Perfil tab</div>
+    <div class="error-msg">Assertion is false: &quot;Meu Perfil&quot; is visible</div>
+    
+    
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">20.0s</span>
+    </div>
+    <div class="card-name">Self-care detail (open first card)</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/80-selfcare-detail.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:10 CA CA
+Meus Favoritos
+Seus conteúdos salvos para acessar
+rapidamente
+Artigos Favoritos
+T 7) » TA. ? —~—— x
+&gt; e C o em &amp; hs,
+BLY Peo 08 = pe
+» ©
+e E &gt; CV JY | (
+Vá NO
+Técnicas contra Enfrentando
+ansiedade a Compulséo
+Alimentar
+Trilhas Self-Care Favoritas
+Bulimia |
+7! ash
+CAAT
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">SOS — Diário de Crise</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/62-sos-grounding.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>MÁS SAS
+&lt; 5-4-3-2-1 Grounding
+o
+5 coisas que você VÊ
+Olhe ao redor e nomeie 5 coisas que
+você consegue ver.
+
+Ex: a janela, uma planta, minha mão...
+
+Resposta opcional — pode avançar sem preencher</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">20.0s</span>
+    </div>
+    <div class="card-name">Programas list</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/34-programas-list.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:11 OCT
+Pesquisar Programas
+Encontre programas completos de
+bem-estar
+Q Pesquisar Programas
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card pass">
+    <div class="card-header">
+      <span class="card-badge pass">🟢 PASS</span>
+      <span class="card-dur">8.0s</span>
+    </div>
+    <div class="card-name">Smoke — app launches</div>
+    
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/00-smoke-login.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>SaudeMental Backoffice
+Login
+Entre para continuar.
+E-mail
+Seu E-mail
+Senha
+DO Manter conectado</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">16.0s</span>
+    </div>
+    <div class="card-name">Logout</div>
+    <div class="error-msg">Assertion is false: &quot;Meu Perfil&quot; is visible</div>
+    
+    
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">20.0s</span>
+    </div>
+    <div class="card-name">Home tab</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/20-home.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:11 Ch Fil |
+Olá, Victor!
+Como podemos te ajudar?
+Q Pesquisar conteúdos
+Lembretes Acessar Minha Jornada &gt;
+Este espaço é seu
+Se quiser, você pode registrar
+como está hoje
+Guia de Conteúdos
+Diário de Trilhas
+Emoções Terapêuticas
+\ =
+RN 7 | — - DD
+AUTOCUIDADO
+Trilhas Self-Care Ver mais &gt;
+E AES. aU SS)
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">Therapies list (from Home)</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/31-therapies-list.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:12 CA CA
+Meus Favoritos
+Seus conteúdos salvos para acessar
+rapidamente
+Artigos Favoritos
+T 7) » TA. ? —~—— x
+&gt; e C o em &amp; hs,
+BLY Peo 08 = pe
+» ©
+e E &gt; CV JY | (
+Vá NO
+Técnicas contra Enfrentando
+ansiedade a Compulséo
+Alimentar
+Trilhas Self-Care Favoritas
+Bulimia |
+7! ash
+CAAT
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">20.0s</span>
+    </div>
+    <div class="card-name">Minha Jornada tab</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    
+    
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">SOS — Grounding Corporal</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/62-sos-grounding.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>MÁS SAS
+&lt; 5-4-3-2-1 Grounding
+o
+5 coisas que você VÊ
+Olhe ao redor e nomeie 5 coisas que
+você consegue ver.
+
+Ex: a janela, uma planta, minha mão...
+
+Resposta opcional — pode avançar sem preencher</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">Shop (rewards)</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/engagement-rewards.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>Gestão de Recompensas</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">20.0s</span>
+    </div>
+    <div class="card-name">Testes Psicológicos list</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/30-selfcares-list.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:06 CA CA
+Meus Favoritos
+Seus conteúdos salvos para acessar
+rapidamente
+Artigos Favoritos
+T 7) » TA. ? —~—— x
+&gt; e C o em &amp; hs,
+BLY Peo 08 = pe
+» ©
+e E &gt; CV JY | (
+Vá NO
+Técnicas contra Enfrentando
+ansiedade a Compulséo
+Alimentar
+Trilhas Self-Care Favoritas
+Bulimia |
+7! ash
+CAAT
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">SOS — Caixa SOS</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/60-sos.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:15 SAS)
+&lt; Recursos de Emergência
+©
+Você não esta
+inho
+Se você está passando por um momento
+difícil, ligue. Eles estão disponíveis pra te
+ouvir.
+Respiração 5-4-3-2-1
+3 padrões guiados Grounding pelos
+sentidos
+Caixa SOS Didrio de Crise
+6 técnicas rápidas Organize o que
+você sente</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">15.0s</span>
+    </div>
+    <div class="card-name">Premium subscriptions list</div>
+    <div class="error-msg">Assertion is false: &quot;Meu Perfil&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/premium-plan-manager.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>® Backoffice ® Terapias ~~ B Artigos Vselícare  E@ Cursos [Programas —&amp; Usuários E2E Test yv
+# Home / Planos Premium
+Gerenciador de Planos Premium
+Selecionar plano v
+Os planos premium sao assinaturas do Google Play, que poder assados atr ink: Acessar Google Play</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">Courses list (from Home)</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/32-courses-list.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:14 CA Fil |
+&lt; Volte Em Breve!
+Nu
+Em Construção
+Desculpe-nos pelo transtorno.
+Estamos trabalhando para
+melhorar a sua experiência!
+O) Cannot update a component (Forward...</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">SOS main screen</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/60-sos.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:15 SAS)
+&lt; Recursos de Emergência
+©
+Você não esta
+inho
+Se você está passando por um momento
+difícil, ligue. Eles estão disponíveis pra te
+ouvir.
+Respiração 5-4-3-2-1
+3 padrões guiados Grounding pelos
+sentidos
+Caixa SOS Didrio de Crise
+6 técnicas rápidas Organize o que
+você sente</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">16.0s</span>
+    </div>
+    <div class="card-name">Edit Profile</div>
+    <div class="error-msg">Assertion is false: &quot;Meu Perfil&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/40-edit-profile.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:15 CRA FH |
+4 Editar Perfil
+Atualizar Foto de Perfil
+° +
+(8
+Atualizar Dados do Usudrio
+Nome
+victor
+Sobrenome
+sabino
+Data de nascimento
+21/12/1992
+E-mail
+victor.sabino@supernovasw.com
+CPF
+000.000.000-00
+Autorizar Alterações
+&lt;4 o =</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">21.0s</span>
+    </div>
+    <div class="card-name">SOS — 5-4-3-2-1 Grounding</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/62-sos-grounding.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>MÁS SAS
+&lt; 5-4-3-2-1 Grounding
+o
+5 coisas que você VÊ
+Olhe ao redor e nomeie 5 coisas que
+você consegue ver.
+
+Ex: a janela, uma planta, minha mão...
+
+Resposta opcional — pode avançar sem preencher</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">20.0s</span>
+    </div>
+    <div class="card-name">Emotion Pattern Visualizer</div>
+    <div class="error-msg">Assertion is false: &quot;Guia de Conteúdos&quot; is visible</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/52-emotion-pattern.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:16 CA CA
+Meus Favoritos
+Seus conteúdos salvos para acessar
+rapidamente
+Artigos Favoritos
+T 7) » TA. ? —~—— x
+&gt; e C o em &amp; hs,
+BLY Peo 08 = pe
+» ©
+e E &gt; CV JY | (
+Vá NO
+Técnicas contra Enfrentando
+ansiedade a Compulséo
+Alimentar
+Trilhas Self-Care Favoritas
+Bulimia |
+7! ash
+CAAT
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">15.0s</span>
+    </div>
+    <div class="card-name">Favoritos</div>
+    <div class="error-msg">Assertion is false: &quot;Meu Perfil&quot; is visible</div>
+    
+    
+  </div></div>
+<div class="tab-panel" id="panel-cross-stack">
+  <div class="card pass">
+    <div class="card-header">
+      <span class="card-badge pass">🟢 PASS</span>
+      <span class="card-dur">2.7s</span>
+    </div>
+    <div class="card-name">step 1-3: create selfcare in backoffice list</div>
+    
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/30-selfcares-list.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:06 CA CA
+Meus Favoritos
+Seus conteúdos salvos para acessar
+rapidamente
+Artigos Favoritos
+T 7) » TA. ? —~—— x
+&gt; e C o em &amp; hs,
+BLY Peo 08 = pe
+» ©
+e E &gt; CV JY | (
+Vá NO
+Técnicas contra Enfrentando
+ansiedade a Compulséo
+Alimentar
+Trilhas Self-Care Favoritas
+Bulimia |
+7! ash
+CAAT
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card pass">
+    <div class="card-header">
+      <span class="card-badge pass">🟢 PASS</span>
+      <span class="card-dur">24ms</span>
+    </div>
+    <div class="card-name">step 4: DB row exists in selfcares</div>
+    
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/00-smoke-login.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>SaudeMental Backoffice
+Login
+Entre para continuar.
+E-mail
+Seu E-mail
+Senha
+DO Manter conectado</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">16.8s</span>
+    </div>
+    <div class="card-name">step 1-2: edit user premium plan in backoffice</div>
+    <div class="error-msg">Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/b2b-plan-manager-action.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    
+  </div>
+
+  <div class="card skip">
+    <div class="card-header">
+      <span class="card-badge skip">⬜ SKIP</span>
+      <span class="card-dur">0ms</span>
+    </div>
+    <div class="card-name">step 3: DB reflects premium / non-freemium for e2e-user</div>
+    
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/43-premium.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:14 CA Fil |
+8, Editar Usuário &gt;
+E Loja &gt;
+£5 Minha Assinatura &gt;
+lx* Alterar Senha &gt;
+O Suporte &gt;
+(3 Politica de Privacidade &gt;
+ví Termos de Uso
+(&gt; Sair
+SaudeMental.clubº - Todos os Direitos Reservados
+2021 - 2026
+A =
+4 em</pre></details>
+  </div>
+
+  <div class="card skip">
+    <div class="card-header">
+      <span class="card-badge skip">⬜ SKIP</span>
+      <span class="card-dur">0ms</span>
+    </div>
+    <div class="card-name">step 4: Maestro sees Premium on Profile &gt; Minha Assinatura</div>
+    
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/40-edit-profile.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:15 CRA FH |
+4 Editar Perfil
+Atualizar Foto de Perfil
+° +
+(8
+Atualizar Dados do Usudrio
+Nome
+victor
+Sobrenome
+sabino
+Data de nascimento
+21/12/1992
+E-mail
+victor.sabino@supernovasw.com
+CPF
+000.000.000-00
+Autorizar Alterações
+&lt;4 o =</pre></details>
+  </div>
+
+  <div class="card fail">
+    <div class="card-header">
+      <span class="card-badge fail">🔴 FAIL</span>
+      <span class="card-dur">44ms</span>
+    </div>
+    <div class="card-name">step 2: DB — emotion_entries row exists for today (e2e-user)</div>
+    <div class="error-msg">Error: No emotion_entries row found for user 3 on 2026-04-19. If the Maestro flow only opens the screen (does not submit), this step will always fail. Extend the flow to tap a mood emotion. Original error: Error: psql exited 1: ERROR:  column &quot;user_id&quot; does not exist</div>
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/52-emotion-pattern.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:16 CA CA
+Meus Favoritos
+Seus conteúdos salvos para acessar
+rapidamente
+Artigos Favoritos
+T 7) » TA. ? —~—— x
+&gt; e C o em &amp; hs,
+BLY Peo 08 = pe
+» ©
+e E &gt; CV JY | (
+Vá NO
+Técnicas contra Enfrentando
+ansiedade a Compulséo
+Alimentar
+Trilhas Self-Care Favoritas
+Bulimia |
+7! ash
+CAAT
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card skip">
+    <div class="card-header">
+      <span class="card-badge skip">⬜ SKIP</span>
+      <span class="card-dur">0ms</span>
+    </div>
+    <div class="card-name">step 3: Playwright HR — mood-tracking page renders</div>
+    
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/wellness-mood-tracking.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>O saudementateiuo
+FF A] Diario de Emocoes
+lik Dashboard Monitore o bem-estar emocional da equipe
+VW Análises
+WE Ranking &amp; Metas
+Este Mes ME + Nova Categoria
+É Recompensas
+B Relatórios
+% Configurações
+igurag [-) 2 a
+-- o -- +0%
+Humor Medio Total de Usuarios Ativos vs Mes Anterior
+Registros
+® Categorias EE Registros Recentes
+[J
+Gestora RH
+Tendencia de Humor ao Longo do Tempo Distribuicao de
+—_—_—_—_ FH i Humor
+Dados de tendencia ainda nao disponíveis. o)
+Nenhuma categoria
+de humor
+cadastrada.
+Humo</pre></details>
+  </div></div>
+<div class="tab-panel" id="panel-fixme">
+  <div class="card fixme">
+    <div class="card-header">
+      <span class="card-badge fixme">⚪ FIXME</span>
+      <span class="card-dur">15ms</span>
+    </div>
+    <div class="card-name">step 5: Maestro sees the new selfcare in the app</div>
+    
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/app/31-therapies-list.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>11:12 CA CA
+Meus Favoritos
+Seus conteúdos salvos para acessar
+rapidamente
+Artigos Favoritos
+T 7) » TA. ? —~—— x
+&gt; e C o em &amp; hs,
+BLY Peo 08 = pe
+» ©
+e E &gt; CV JY | (
+Vá NO
+Técnicas contra Enfrentando
+ansiedade a Compulséo
+Alimentar
+Trilhas Self-Care Favoritas
+Bulimia |
+7! ash
+CAAT
+INÍCIO MINHA JORNADA FAVORITOS PESQUISAR MENU</pre></details>
+  </div>
+
+  <div class="card fixme">
+    <div class="card-header">
+      <span class="card-badge fixme">⚪ FIXME</span>
+      <span class="card-dur">17ms</span>
+    </div>
+    <div class="card-name">step 1a: Maestro — open Diário de Emoções (navigation)</div>
+    
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/categorias-slides-action.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    
+  </div>
+
+  <div class="card fixme">
+    <div class="card-header">
+      <span class="card-badge fixme">⚪ FIXME</span>
+      <span class="card-dur">14ms</span>
+    </div>
+    <div class="card-name">step 1b: Maestro — assert mood diary screen visible</div>
+    
+    <div class="shot-row"><div class="shot-wrap"><img src="screenshots/backoffice/wellness-mood-tracking.png" alt="screenshot" loading="lazy"><div class="shot-label">Current</div></div></div>
+    <details class="ocr-block"><summary>OCR text</summary><pre>O saudementateiuo
+FF A] Diario de Emocoes
+lik Dashboard Monitore o bem-estar emocional da equipe
+VW Análises
+WE Ranking &amp; Metas
+Este Mes ME + Nova Categoria
+É Recompensas
+B Relatórios
+% Configurações
+igurag [-) 2 a
+-- o -- +0%
+Humor Medio Total de Usuarios Ativos vs Mes Anterior
+Registros
+® Categorias EE Registros Recentes
+[J
+Gestora RH
+Tendencia de Humor ao Longo do Tempo Distribuicao de
+—_—_—_—_ FH i Humor
+Dados de tendencia ainda nao disponíveis. o)
+Nenhuma categoria
+de humor
+cadastrada.
+Humo</pre></details>
+  </div></div>
+
+<script>
+function switchTab(btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('visible'))
+  btn.classList.add('active')
+  const panel = document.getElementById(btn.dataset.panel)
+  if (panel) panel.classList.add('visible')
+}
+// Activate first tab with content
+(function() {
+  const panels = document.querySelectorAll('.tab-panel')
+  const btns = document.querySelectorAll('.tab-btn')
+  for (let i = 0; i < panels.length; i++) {
+    const isEmpty = panels[i].querySelector('.empty')
+    if (!isEmpty) {
+      btns[i].classList.add('active')
+      panels[i].classList.add('visible')
+      return
+    }
+  }
+  // fallback: first tab
+  if (btns[0]) btns[0].classList.add('active')
+  if (panels[0]) panels[0].classList.add('visible')
+})()
+</script>
+</body>
+</html>

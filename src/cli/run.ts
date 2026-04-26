@@ -5,6 +5,7 @@ import { resolve } from 'node:path'
 import { config } from '../../e2e.config.js'
 import { boot } from '../stack/index.js'
 import { seed } from '../stack/seed.js'
+import { swapToLocal } from '../stack/app-env.js'
 import { extractTextFromAll } from '../post/ocr.js'
 import { diffAgainstBaseline } from '../post/visual-diff.js'
 import { buildReport } from '../post/report.js'
@@ -15,6 +16,8 @@ type Opts = {
   visualRegression?: boolean
   appOnly?: boolean
   backofficeOnly?: boolean
+  skipAppEnvSwap?: boolean
+  lanIp?: boolean
 }
 
 function step(label: string): () => void {
@@ -29,6 +32,23 @@ export async function run(opts: Opts): Promise<void> {
 
   let stack: Awaited<ReturnType<typeof boot>> | null = null
   let exitCode = 0
+  let restoreAppEnv: (() => Promise<void>) | null = null
+
+  // Wire up signal handlers early so Ctrl-C always restores .env.local
+  const handleSignal = async (signal: NodeJS.Signals) => {
+    console.log(kleur.yellow(`\n⚠ received ${signal} — cleaning up…`))
+    if (restoreAppEnv) {
+      await restoreAppEnv().catch((e) =>
+        console.error(kleur.red('  ✗ .env.local restore failed:'), e instanceof Error ? e.message : e),
+      )
+    }
+    if (stack) {
+      await stack.teardown().catch(() => {})
+    }
+    process.exit(signal === 'SIGINT' ? 130 : 143)
+  }
+  process.once('SIGINT', handleSignal)
+  process.once('SIGTERM', handleSignal)
 
   try {
     // --- PHASE 1: boot ---
@@ -43,6 +63,14 @@ export async function run(opts: Opts): Promise<void> {
     done()
 
     const st = await stack!.status()
+
+    // --- PHASE 2.5: swap app .env.local to point at local stack ---
+    if (!opts.skipAppEnvSwap) {
+      const appPath = config.repos.app
+      const backendUrl = st.backend.url.replace('localhost', '10.0.2.2')
+      const { restore } = await swapToLocal(appPath, backendUrl, opts.lanIp ?? false)
+      restoreAppEnv = restore
+    }
 
     // --- PHASE 3: backoffice (Playwright) ---
     if (!opts.appOnly) {
@@ -67,7 +95,8 @@ export async function run(opts: Opts): Promise<void> {
         stdio: 'inherit',
         env: {
           ...process.env,
-          EXPO_PUBLIC_API_BASE_URL: st.backend.url,
+          // Android emulator reaches host via 10.0.2.2, not localhost.
+          EXPO_PUBLIC_API_BASE_URL: st.backend.url.replace('localhost', '10.0.2.2'),
         },
       })
       done()
@@ -122,6 +151,17 @@ export async function run(opts: Opts): Promise<void> {
     console.error(kleur.red('\n✗ run failed:'), err instanceof Error ? err.message : err)
     exitCode = 1
   } finally {
+    // Remove signal handlers — we're in the finally block now, cleanup runs unconditionally
+    process.off('SIGINT', handleSignal)
+    process.off('SIGTERM', handleSignal)
+
+    // Always restore .env.local, even on failure
+    if (restoreAppEnv) {
+      await restoreAppEnv().catch((e) =>
+        console.error(kleur.red('  ✗ .env.local restore failed:'), e instanceof Error ? e.message : e),
+      )
+    }
+
     if (stack) {
       const done = step('teardown')
       await stack.teardown().catch((e) => console.error(kleur.red('teardown error:'), e))

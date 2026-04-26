@@ -29,4 +29,12 @@ export interface SeedResult {
   endUser: { id: number; email: string }
   /** Any content fixtures created (therapies, self-cares, etc.) */
   content: Record<string, number[]>
+  /** HR analytics population counts */
+  analytics: {
+    employees: number
+    emotion_entries: number
+    points_history: number
+    reward_requests: number
+    track_progress: number
+  }
 }

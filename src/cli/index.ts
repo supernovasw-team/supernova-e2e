@@ -24,6 +24,8 @@ program
   .option('--visual-regression', 'compare screenshots with baseline, fail on diff')
   .option('--app-only', 'run only the Maestro app flows')
   .option('--backoffice-only', 'run only the Playwright backoffice specs')
+  .option('--skip-app-env-swap', 'do not swap .env.local before running (use current app env)')
+  .option('--lan-ip', 'use host LAN IP (en0) instead of 10.0.2.2 — for real device testing')
   .action(async (opts) => {
     const { run } = await import('./run.js')
     await run(opts)
